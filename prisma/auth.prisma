@@ -22,7 +22,6 @@ model User {
   reviewsGiven Review[]  @relation("ReviewClient")
   reportsMade  Report[]  @relation("ReportReporter")
   suspension   UserSuspension?
-  templates    ConsultantTemplate[]
 
   @@index([email])
   @@index([role])

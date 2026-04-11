@@ -53,7 +53,6 @@ model ConsultantTemplate {
   updatedAt       DateTime @updatedAt
 
   consultant Consultant @relation(fields: [consultantId], references: [id], onDelete: Cascade)
-  user       User       @relation(fields: [consultantId], references: [id], onDelete: Cascade)
 
   @@index([consultantId])
   @@map("consultant_templates")
