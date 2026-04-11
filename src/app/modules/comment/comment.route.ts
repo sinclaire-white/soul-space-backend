@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
+import { commentLimiter } from "../../middleware/rateLimiter";
 import { CommentController } from "./comment.controller";
 import { CommentValidation } from "./comment.validation";
 
@@ -10,10 +11,11 @@ const router = Router();
 router.get("/post/:postId", CommentController.getCommentsByPostId);
 router.get("/:id", CommentController.getCommentById);
 
-// Protected routes
+// Protected routes with rate limiting
 router.post(
     "/post/:postId",
     checkAuth(),
+    commentLimiter,
     validateRequest(CommentValidation.createCommentSchema),
     CommentController.createComment
 );

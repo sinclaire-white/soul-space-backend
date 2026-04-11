@@ -2,15 +2,17 @@ import { Router } from "express";
 import { UserRole } from "../../../generated/prisma/enums";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
+import { bookingLimiter } from "../../middleware/rateLimiter";
 import { BookingController } from "./booking.controller";
 import { BookingValidation } from "./booking.validation";
 
 const router = Router();
 
-// Client routes
+// Client routes with rate limiting
 router.post(
     "/",
     checkAuth(UserRole.USER, UserRole.CONSULTANT, UserRole.ADMIN, UserRole.SUPER_ADMIN),
+    bookingLimiter,
     validateRequest(BookingValidation.createBookingSchema),
     BookingController.createBooking
 );

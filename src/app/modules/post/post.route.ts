@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
+import { postLimiter } from "../../middleware/rateLimiter";
 import { PostController } from "./post.controller";
 import { PostValidation } from "./post.validation";
 
@@ -10,10 +11,11 @@ const router = Router();
 router.get("/", PostController.getAllPosts);
 router.get("/:id", PostController.getPostById);
 
-// Protected routes
+// Protected routes with rate limiting
 router.post(
     "/",
     checkAuth(),
+    postLimiter,
     validateRequest(PostValidation.createPostSchema),
     PostController.createPost
 );

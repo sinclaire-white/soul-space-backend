@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
+import { reactionLimiter } from "../../middleware/rateLimiter";
 import { ReactionController } from "./reaction.controller";
 import { ReactionValidation } from "./reaction.validation";
 
@@ -10,10 +11,11 @@ const router = Router();
 router.get("/trending", ReactionController.getTrendingPosts);
 router.get("/post/:postId", ReactionController.getPostReactions);
 
-// Protected routes
+// Protected routes with rate limiting
 router.post(
     "/post/:postId",
     checkAuth(),
+    reactionLimiter,
     validateRequest(ReactionValidation.createReactionSchema),
     ReactionController.createOrUpdateReaction
 );
