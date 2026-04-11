@@ -5,6 +5,7 @@ import { ConsultantRoutes } from "../modules/consultant/consultant.route";
 import { NicknameRoutes } from "../modules/nickname/nickname.route";
 import { PostRoutes } from "../modules/post/post.route";
 import { ReactionRoutes } from "../modules/reaction/reaction.route";
+import { ReviewRoutes } from "../modules/review/review.route";
 import { UserRoutes } from "../modules/user/user.route";
 
 const router = Router();
@@ -16,5 +17,6 @@ router.use("/comments", CommentRoutes);
 router.use("/reactions", ReactionRoutes);
 router.use("/consultants", ConsultantRoutes);
 router.use("/bookings", BookingRoutes);
+router.use("/reviews", ReviewRoutes);
 
 export const IndexRoutes = router;
