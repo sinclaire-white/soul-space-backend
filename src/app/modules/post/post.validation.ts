@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PostStatus, PostVisibility } from "../../../generated/prisma/enums";
+import { PostStatus, PostVisibility } from "../../../../prisma/generated/prisma/enums";
 
 const createPostSchema = z.object({
     content: z

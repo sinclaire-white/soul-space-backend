@@ -1,4 +1,4 @@
-import { UserRole } from "../../../generated/prisma/enums";
+import { UserRole } from "../../../../prisma/generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { IUser, IUserCreate, IUserFilters, IUserUpdate } from "./user.interface";
 

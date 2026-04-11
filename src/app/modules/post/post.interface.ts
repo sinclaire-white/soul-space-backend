@@ -1,4 +1,4 @@
-import { PostStatus, PostVisibility } from "../../../generated/prisma/enums";
+import { PostStatus, PostVisibility } from "../../../../prisma/generated/prisma/enums";
 
 export interface IPost {
     id: string;

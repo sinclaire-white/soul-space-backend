@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CommentStatus } from "../../../generated/prisma/enums";
+import { CommentStatus } from "../../../../prisma/generated/prisma/enums";
 
 const createCommentSchema = z.object({
     content: z

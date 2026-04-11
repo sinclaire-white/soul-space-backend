@@ -1,4 +1,4 @@
-import { PostVisibility, UserRole } from "../../../generated/prisma/enums";
+import { PostVisibility, UserRole } from "../../../../prisma/generated/prisma/enums";
 
 export interface IUser {
     id: string;

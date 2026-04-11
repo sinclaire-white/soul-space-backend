@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { AdminRoutes } from "../modules/admin/admin.route";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { AvailabilityRoutes } from "../modules/availability/availability.route";
 import { BookingRoutes } from "../modules/booking/booking.route";
@@ -24,5 +25,6 @@ router.use("/availabilities", AvailabilityRoutes);
 router.use("/bookings", BookingRoutes);
 router.use("/reviews", ReviewRoutes);
 router.use("/reports", ReportRoutes);
+router.use("/admin", AdminRoutes);
 
 export const IndexRoutes = router;

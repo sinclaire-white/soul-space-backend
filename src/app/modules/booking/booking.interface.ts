@@ -1,4 +1,4 @@
-import { BookingStatus, PaymentStatus } from "../../../generated/prisma/enums";
+import { BookingStatus, PaymentStatus } from "../../../../prisma/generated/prisma/enums";
 
 export interface IBooking {
     id: string;

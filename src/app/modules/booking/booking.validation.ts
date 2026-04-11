@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BookingStatus } from "../../../generated/prisma/enums";
+import { BookingStatus } from "../../../../prisma/generated/prisma/enums";
 
 const createBookingSchema = z.object({
     consultantId: z.string().min(1, "Consultant ID is required"),

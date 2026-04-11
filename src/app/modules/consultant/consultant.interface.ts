@@ -1,4 +1,4 @@
-import { VerificationStatus } from "../../../generated/prisma/enums";
+import { VerificationStatus } from "../../../../prisma/generated/prisma/enums";
 
 export interface IConsultant {
     id: string;

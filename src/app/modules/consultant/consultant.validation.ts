@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { VerificationStatus } from "../../../generated/prisma/enums";
+import { VerificationStatus } from "../../../../prisma/generated/prisma/enums";
 
 const createConsultantSchema = z.object({
     professionalTitle: z.string().min(2, "Professional title is required"),

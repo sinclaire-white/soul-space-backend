@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PostVisibility, UserRole } from "../../../generated/prisma/enums";
+import { PostVisibility, UserRole } from "../../../../prisma/generated/prisma/enums";
 
 const createUserSchema = z.object({
     email: z.string().email("Invalid email address"),

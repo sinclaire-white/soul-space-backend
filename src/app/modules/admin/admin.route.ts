@@ -1,0 +1,46 @@
+import { Router } from "express";
+import { UserRole } from "../../../generated/prisma/enums";
+import { checkAuth } from "../../middleware/checkAuth";
+import { validateRequest } from "../../middleware/validateRequest";
+import { AdminController } from "./admin.controller";
+import { AdminValidation } from "./admin.validation";
+
+const router = Router();
+
+// All routes require admin or super admin
+router.use(checkAuth(UserRole.ADMIN, UserRole.SUPER_ADMIN));
+
+// Dashboard stats
+router.get("/dashboard/stats", AdminController.getDashboardStats);
+router.get("/stats/users", AdminController.getUserStats);
+router.get("/stats/posts", AdminController.getPostStats);
+router.get("/stats/bookings", AdminController.getBookingStats);
+router.get("/stats/reports", AdminController.getReportStats);
+
+// User management
+router.get("/users", AdminController.getAllUsers);
+router.get("/users/:id", AdminController.getUserById);
+router.patch(
+    "/users/:id",
+    validateRequest(AdminValidation.updateUserSchema),
+    AdminController.updateUser
+);
+router.post(
+    "/users/:id/moderate",
+    validateRequest(AdminValidation.moderationSchema),
+    AdminController.moderateUser
+);
+
+// Post management
+router.get("/posts", AdminController.getAllPosts);
+router.patch(
+    "/posts/:id",
+    validateRequest(AdminValidation.updatePostSchema),
+    AdminController.updatePost
+);
+router.delete("/posts/:id", AdminController.deletePost);
+
+// Moderation logs
+router.get("/moderation-logs", AdminController.getModerationLogs);
+
+export const AdminRoutes = router;

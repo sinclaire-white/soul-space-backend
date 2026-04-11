@@ -1,4 +1,4 @@
-import { ReportType, ReportStatus } from "../../../generated/prisma/enums";
+import { ReportType, ReportStatus } from "../../../../prisma/generated/prisma/enums";
 
 export interface IReport {
     id: string;

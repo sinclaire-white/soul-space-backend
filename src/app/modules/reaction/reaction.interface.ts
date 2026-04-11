@@ -1,4 +1,4 @@
-import { ReactionType } from "../../../generated/prisma/enums";
+import { ReactionType } from "../../../../prisma/generated/prisma/enums";
 
 export interface IReaction {
     id: string;

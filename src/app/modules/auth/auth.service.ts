@@ -1,5 +1,5 @@
 import status from "http-status";
-import { UserRole, UserStatus } from "../../../generated/prisma/enums";
+import { UserRole, UserStatus } from "../../../../prisma/generated/prisma/enums";
 import AppError from "../../errorHelpers/AppError";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";

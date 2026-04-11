@@ -12,6 +12,6 @@
     "ignoreDeprecations": "5.0",
     "typeRoots": ["./node_modules/@types", "./src/app/types"]
   },
-  "include": ["src", "prisma.config.ts"],
+  "include": ["src", "prisma.config.ts", "prisma/generated"],
   "exclude": ["node_modules", "dist"]
 }

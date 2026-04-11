@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ReactionType } from "../../../generated/prisma/enums";
+import { ReactionType } from "../../../../prisma/generated/prisma/enums";
 
 const createReactionSchema = z.object({
     reactionType: z.nativeEnum(ReactionType, {

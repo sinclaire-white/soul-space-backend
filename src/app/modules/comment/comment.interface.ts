@@ -1,4 +1,4 @@
-import { CommentStatus } from "../../../generated/prisma/enums";
+import { CommentStatus } from "../../../../prisma/generated/prisma/enums";
 
 export interface IComment {
     id: string;
