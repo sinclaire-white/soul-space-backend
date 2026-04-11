@@ -1,0 +1,16 @@
+node_modules
+dist
+build
+*.txt
+log
+*.log
+*.out
+*.err
+*.pid
+.DS_Store
+.env
+.vscode
+.idea
+*.md
+
+/generated/prisma
