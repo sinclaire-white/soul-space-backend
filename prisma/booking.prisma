@@ -1,0 +1,47 @@
+model Booking {
+  id               String        @id @default(cuid())
+  clientId         String        @db.VarChar
+  consultantId     String        @db.VarChar
+  scheduledAt      DateTime
+  durationMinutes  Int           @default(60)
+  status           BookingStatus @default(PENDING)
+  meetingLink      String?       @db.Text
+  preSessionNotes  String?       @db.Text
+  postSessionNotes String?       @db.Text
+  pricePaid        Decimal       @db.Decimal(10, 2)
+  paymentStatus    PaymentStatus @default(PENDING)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  client     User       @relation("ClientBookings", fields: [clientId], references: [id], onDelete: Cascade)
+  consultant Consultant @relation("ConsultantBookings", fields: [consultantId], references: [id], onDelete: Cascade)
+  review     Review?
+
+  @@index([clientId])
+  @@index([consultantId])
+  @@index([clientId, scheduledAt])
+  @@index([consultantId, scheduledAt])
+  @@index([status])
+  @@map("bookings")
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  bookingId    String   @unique @db.VarChar
+  clientId     String   @db.VarChar
+  consultantId String   @db.VarChar
+  rating       Int
+  content      String?  @db.Text
+  isPublic     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  booking    Booking    @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  client     User       @relation("ReviewClient", fields: [clientId], references: [id], onDelete: Cascade)
+  consultant Consultant @relation("ConsultantReviews", fields: [consultantId], references: [id], onDelete: Cascade)
+
+  @@index([consultantId])
+  @@index([clientId])
+  @@index([rating])
+  @@map("reviews")
+}

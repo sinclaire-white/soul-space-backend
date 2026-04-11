@@ -1,0 +1,60 @@
+model Consultant {
+  id                 String             @id @default(cuid())
+  userId             String             @unique @db.VarChar
+  verificationStatus VerificationStatus @default(PENDING)
+  professionalTitle  String             @db.VarChar(255)
+  licenseNumber      String?            @db.VarChar(255)
+  bio                String?            @db.Text
+  hourlyRate         Decimal            @db.Decimal(10, 2)
+  yearsExperience    Int
+  specializations    Json
+  averageRating      Decimal?           @db.Decimal(3, 2)
+  totalSessions      Int                @default(0)
+  isAvailable        Boolean            @default(true)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  availabilities ConsultantAvailability[]
+  bookings       Booking[]              @relation("ConsultantBookings")
+  reviews        Review[]               @relation("ConsultantReviews")
+  templates      ConsultantTemplate[]
+
+  @@index([userId])
+  @@index([verificationStatus])
+  @@index([isAvailable])
+  @@map("consultants")
+}
+
+model ConsultantAvailability {
+  id           String   @id @default(cuid())
+  consultantId String   @db.VarChar
+  dayOfWeek    Int
+  startTime    DateTime
+  endTime      DateTime
+  isRecurring  Boolean  @default(true)
+  isBlocked    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  consultant Consultant @relation(fields: [consultantId], references: [id], onDelete: Cascade)
+
+  @@index([consultantId])
+  @@index([consultantId, dayOfWeek])
+  @@map("consultant_availabilities")
+}
+
+model ConsultantTemplate {
+  id              String   @id @default(cuid())
+  consultantId    String   @db.VarChar
+  templateName    String   @db.VarChar(255)
+  templateContent String   @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  consultant Consultant @relation(fields: [consultantId], references: [id], onDelete: Cascade)
+  user       User       @relation(fields: [consultantId], references: [id], onDelete: Cascade)
+
+  @@index([consultantId])
+  @@map("consultant_templates")
+}

@@ -1,0 +1,22 @@
+model Comment {
+  id                String        @id @default(cuid())
+  postId            String        @db.VarChar
+  authorId          String        @db.VarChar
+  parentCommentId   String?       @db.VarChar
+  content           String        @db.Text
+  isConsultantReply Boolean       @default(false)
+  status            CommentStatus @default(ACTIVE)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  post          Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  parentComment Comment?  @relation("CommentReplies", fields: [parentCommentId], references: [id])
+  replies       Comment[] @relation("CommentReplies")
+
+  @@index([postId])
+  @@index([postId, isConsultantReply, createdAt])
+  @@index([authorId])
+  @@index([parentCommentId])
+  @@map("comments")
+}

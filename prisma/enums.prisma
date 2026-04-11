@@ -1,0 +1,75 @@
+enum UserRole {
+  USER
+  CONSULTANT
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum PostStatus {
+  ACTIVE
+  HIDDEN_BY_USER
+  UNDER_REVIEW
+  REMOVED
+}
+
+enum PostVisibility {
+  PUBLIC
+  CONSULTANTS_ONLY
+}
+
+enum CommentStatus {
+  ACTIVE
+  FLAGGED
+  REMOVED
+}
+
+enum ReactionType {
+  SUPPORT
+  HUG
+  RELATE
+  THANKS
+  STRENGTH
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  SUSPENDED
+  REJECTED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+}
+
+enum ReportType {
+  HARASSMENT
+  MISINFORMATION
+  SPAM
+  IMPERSONATION
+  COPYRIGHT
+  SELF_HARM
+}
+
+enum ReportStatus {
+  OPEN
+  REVIEWED
+  DISMISSED
+  ESCALATED
+}
+
+enum SuspensionType {
+  SHADOW_BAN
+  TEMPORARY
+  PERMANENT
+}

@@ -1,0 +1,81 @@
+model User {
+  id                    String         @id @default(cuid())
+  email                 String         @unique @db.VarChar(255)
+  emailVerified         Boolean        @default(false)
+  name                  String?        @db.VarChar(255)
+  image                 String?        @db.Text
+  role                  UserRole       @default(USER)
+  isActive              Boolean        @default(true)
+  defaultPostVisibility PostVisibility @default(PUBLIC)
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  lastLoginAt           DateTime?
+
+  sessions     Session[]
+  accounts     Account[]
+  nickname     Nickname?
+  posts        Post[]
+  comments     Comment[]
+  reactions    Reaction[]
+  consultant   Consultant?
+  clientBookings Booking[] @relation("ClientBookings")
+  reviewsGiven Review[]  @relation("ReviewClient")
+  reportsMade  Report[]  @relation("ReportReporter")
+  suspension   UserSuspension?
+  templates    ConsultantTemplate[]
+
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+  @@map("users")
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@unique([providerId, accountId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, value])
+  @@map("verifications")
+}

@@ -1,0 +1,17 @@
+model Nickname {
+  id        String   @id @default(cuid())
+  userId    String   @unique @db.VarChar
+  handle    String   @unique @db.VarChar(50)
+  avatarUrl String?  @db.Text
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rotatedAt DateTime @default(now())
+
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts Post[]
+
+  @@index([handle])
+  @@index([userId])
+  @@map("nicknames")
+}

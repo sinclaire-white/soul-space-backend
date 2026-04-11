@@ -1,0 +1,38 @@
+model Report {
+  id         String       @id @default(cuid())
+  reporterId String       @db.VarChar
+  postId     String?      @db.VarChar
+  commentId  String?      @db.VarChar
+  reportType ReportType
+  status     ReportStatus @default(OPEN)
+  notes      String?      @db.Text
+  resolvedAt DateTime?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  reporter User @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@index([reporterId])
+  @@index([postId])
+  @@index([commentId])
+  @@index([status])
+  @@index([reportType])
+  @@map("reports")
+}
+
+model UserSuspension {
+  id             String         @id @default(cuid())
+  userId         String         @unique @db.VarChar
+  reason         String         @db.Text
+  suspensionType SuspensionType
+  expiresAt      DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([suspensionType])
+  @@index([expiresAt])
+  @@map("user_suspensions")
+}

@@ -1,0 +1,39 @@
+model Post {
+  id          String         @id @default(cuid())
+  authorId    String         @db.VarChar
+  nicknameId  String?        @db.VarChar
+  content     String         @db.Text
+  status      PostStatus     @default(ACTIVE)
+  isAnonymous Boolean        @default(false)
+  visibleTo   PostVisibility @default(PUBLIC)
+  viewCount   Int            @default(0)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?
+
+  author   User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  nickname Nickname?  @relation(fields: [nicknameId], references: [id])
+  comments Comment[]
+  reactions Reaction[]
+
+  @@index([authorId])
+  @@index([nicknameId])
+  @@index([status, createdAt])
+  @@map("posts")
+}
+
+model Reaction {
+  id           String       @id @default(cuid())
+  userId       String       @db.VarChar
+  postId       String       @db.VarChar
+  reactionType ReactionType
+  createdAt    DateTime     @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([postId])
+  @@index([userId])
+  @@map("reactions")
+}
