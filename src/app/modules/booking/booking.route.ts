@@ -1,0 +1,43 @@
+import { Router } from "express";
+import { UserRole } from "../../../generated/prisma/enums";
+import { checkAuth } from "../../middleware/checkAuth";
+import { validateRequest } from "../../middleware/validateRequest";
+import { BookingController } from "./booking.controller";
+import { BookingValidation } from "./booking.validation";
+
+const router = Router();
+
+// Client routes
+router.post(
+    "/",
+    checkAuth(UserRole.USER, UserRole.CONSULTANT, UserRole.ADMIN, UserRole.SUPER_ADMIN),
+    validateRequest(BookingValidation.createBookingSchema),
+    BookingController.createBooking
+);
+
+router.get("/me", checkAuth(), BookingController.getMyBookings);
+router.get("/:id", checkAuth(), BookingController.getBookingById);
+router.patch(
+    "/:id",
+    checkAuth(),
+    validateRequest(BookingValidation.updateBookingSchema),
+    BookingController.updateBooking
+);
+router.patch("/:id/cancel", checkAuth(), BookingController.cancelBooking);
+
+// Consultant routes
+router.get(
+    "/consultant/bookings",
+    checkAuth(UserRole.CONSULTANT),
+    BookingController.getConsultantBookings
+);
+
+router.patch("/:id/confirm", checkAuth(UserRole.CONSULTANT), BookingController.confirmBooking);
+
+router.patch(
+    "/:id/complete",
+    checkAuth(UserRole.CONSULTANT),
+    BookingController.completeBooking
+);
+
+export const BookingRoutes = router;
