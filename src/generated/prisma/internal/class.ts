@@ -16,11 +16,13 @@ import type * as Prisma from "./prismaNamespace"
 
 
 const config: runtime.GetPrismaClientConfig = {
-  "previewFeatures": [],
+  "previewFeatures": [
+    "prismaSchemaFolder"
+  ],
   "clientVersion": "7.6.0",
   "engineVersion": "75cbdc1eb7150937890ad5465d861175c6624711",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n",
+  "inlineSchema": "generator client {\n  provider        = \"prisma-client\"\n  output          = \"../src/generated/prisma\"\n  previewFeatures = [\"prismaSchemaFolder\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
