@@ -1,11 +1,11 @@
-import { Router } from "express";
+import express from "express";
 import { UserRole } from "../../../../prisma/generated/prisma/enums";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { ConsultantController } from "./consultant.controller";
 import { ConsultantValidation } from "./consultant.validation";
 
-const router = Router();
+const router = express.Router();
 
 // Public routes
 router.get("/", ConsultantController.getAllConsultants);

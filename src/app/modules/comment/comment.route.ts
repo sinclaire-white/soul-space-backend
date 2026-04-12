@@ -1,11 +1,11 @@
-import { Router } from "express";
+import express from "express";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { commentLimiter } from "../../middleware/rateLimiter";
 import { CommentController } from "./comment.controller";
 import { CommentValidation } from "./comment.validation";
 
-const router = Router();
+const router = express.Router();
 
 // Public routes
 router.get("/post/:postId", CommentController.getCommentsByPostId);

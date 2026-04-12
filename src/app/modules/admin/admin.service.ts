@@ -1,5 +1,5 @@
 import status from "http-status";
-import { ReportStatus, UserRole, UserStatus } from "../../../generated/prisma/enums";
+import { ReportStatus, UserRole } from "../../../../prisma/generated/prisma/enums";
 import AppError from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 import {
@@ -35,7 +35,7 @@ const getDashboardStats = async (): Promise<IDashboardStats> => {
         prisma.consultant.count(),
         prisma.booking.count(),
         prisma.report.count(),
-        prisma.report.count({ where: { status: ReportStatus.PENDING } }),
+        prisma.report.count({ where: { status: ReportStatus.OPEN } }),
         prisma.user.count({ where: { createdAt: { gte: startOfMonth } } }),
         prisma.post.count({ where: { createdAt: { gte: startOfMonth } } }),
         prisma.booking.count({ where: { createdAt: { gte: startOfMonth } } }),

@@ -1,10 +1,10 @@
-import { Router } from "express";
+import express from "express";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { NicknameController } from "./nickname.controller";
 import { NicknameValidation } from "./nickname.validation";
 
-const router = Router();
+const router = express.Router();
 
 // Public routes
 router.get("/check/:handle", NicknameController.checkHandleAvailability);

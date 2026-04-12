@@ -4,6 +4,7 @@ import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import { BookingService } from "./booking.service";
 import { IBookingFilters } from "./booking.interface";
+import { BookingStatus } from "../../../../prisma/generated/prisma/enums";
 
 const createBooking = catchAsync(async (req: Request, res: Response) => {
     const clientId = (req as any).user?.userId;
@@ -19,7 +20,13 @@ const createBooking = catchAsync(async (req: Request, res: Response) => {
 
 const getMyBookings = catchAsync(async (req: Request, res: Response) => {
     const clientId = (req as any).user?.userId;
-    const filters: IBookingFilters = req.query;
+    const filters: IBookingFilters = {
+        status: req.query.status as BookingStatus | undefined,
+        consultantId: req.query.consultantId as string | undefined,
+        clientId: req.query.clientId as string | undefined,
+        fromDate: req.query.fromDate ? new Date(req.query.fromDate as string) : undefined,
+        toDate: req.query.toDate ? new Date(req.query.toDate as string) : undefined,
+    };
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const result = await BookingService.getMyBookings(clientId, filters, page, limit);
@@ -40,7 +47,13 @@ const getMyBookings = catchAsync(async (req: Request, res: Response) => {
 
 const getConsultantBookings = catchAsync(async (req: Request, res: Response) => {
     const consultantUserId = (req as any).user?.userId;
-    const filters: IBookingFilters = req.query;
+    const filters: IBookingFilters = {
+        status: req.query.status as BookingStatus | undefined,
+        consultantId: req.query.consultantId as string | undefined,
+        clientId: req.query.clientId as string | undefined,
+        fromDate: req.query.fromDate ? new Date(req.query.fromDate as string) : undefined,
+        toDate: req.query.toDate ? new Date(req.query.toDate as string) : undefined,
+    };
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
 
@@ -75,7 +88,7 @@ const getConsultantBookings = catchAsync(async (req: Request, res: Response) => 
 });
 
 const getBookingById = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await BookingService.getBookingById(id);
 
     sendResponse(res, {
@@ -87,7 +100,7 @@ const getBookingById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateBooking = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const userId = (req as any).user?.userId;
     const result = await BookingService.updateBooking(id, userId, req.body);
 
@@ -100,7 +113,7 @@ const updateBooking = catchAsync(async (req: Request, res: Response) => {
 });
 
 const cancelBooking = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const userId = (req as any).user?.userId;
     const result = await BookingService.cancelBooking(id, userId);
 
@@ -113,7 +126,7 @@ const cancelBooking = catchAsync(async (req: Request, res: Response) => {
 });
 
 const confirmBooking = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const consultantUserId = (req as any).user?.userId;
     const result = await BookingService.confirmBooking(id, consultantUserId);
 
@@ -126,7 +139,7 @@ const confirmBooking = catchAsync(async (req: Request, res: Response) => {
 });
 
 const completeBooking = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const consultantUserId = (req as any).user?.userId;
     const { postSessionNotes } = req.body;
     const result = await BookingService.completeBooking(id, consultantUserId, postSessionNotes);

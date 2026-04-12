@@ -22,7 +22,7 @@ export interface IAuthResponse {
         role: string;
         emailVerified: boolean;
     };
-    accessToken: string;
+    token: string;
     refreshToken: string;
     sessionToken: string;
 }

@@ -1,11 +1,11 @@
-import { Router } from "express";
+import express from "express";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { reactionLimiter } from "../../middleware/rateLimiter";
 import { ReactionController } from "./reaction.controller";
 import { ReactionValidation } from "./reaction.validation";
 
-const router = Router();
+const router = express.Router();
 
 // Public routes
 router.get("/trending", ReactionController.getTrendingPosts);

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import status from "http-status";
-import { UserRole } from "../../../../prisma/generated/prisma/enums";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import { ReportService } from "./report.service";
@@ -39,7 +38,7 @@ const getAllReports = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getReportById = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await ReportService.getReportById(id);
 
     sendResponse(res, {
@@ -51,7 +50,7 @@ const getReportById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateReport = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await ReportService.updateReport(id, req.body);
 
     sendResponse(res, {
@@ -63,7 +62,7 @@ const updateReport = catchAsync(async (req: Request, res: Response) => {
 });
 
 const hideContent = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await ReportService.hideContent(id);
 
     sendResponse(res, {
@@ -75,7 +74,7 @@ const hideContent = catchAsync(async (req: Request, res: Response) => {
 });
 
 const removeContent = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     await ReportService.removeContent(id);
 
     sendResponse(res, {

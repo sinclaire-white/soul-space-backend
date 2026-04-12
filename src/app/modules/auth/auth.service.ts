@@ -1,5 +1,5 @@
 import status from "http-status";
-import { UserRole, UserStatus } from "../../../../prisma/generated/prisma/enums";
+import { envVars } from "../../config/env";
 import AppError from "../../errorHelpers/AppError";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
@@ -52,7 +52,7 @@ const registerUser = async (payload: IRegisterUserPayload): Promise<IAuthRespons
             role: data.user.role,
             emailVerified: data.user.emailVerified,
         },
-        accessToken,
+        token: accessToken,
         refreshToken,
         sessionToken: data.token,
     };
@@ -98,7 +98,7 @@ const loginUser = async (payload: ILoginUserPayload): Promise<IAuthResponse> => 
             role: data.user.role,
             emailVerified: data.user.emailVerified,
         },
-        accessToken,
+        token: accessToken,
         refreshToken,
         sessionToken: data.token,
     };
@@ -136,7 +136,7 @@ const getNewToken = async (refreshToken: string, sessionToken: string): Promise<
         throw new AppError(status.UNAUTHORIZED, "Invalid session");
     }
 
-    const verifiedToken = jwtUtils.verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET!);
+    const verifiedToken = jwtUtils.verifyToken(refreshToken, envVars.REFRESH_TOKEN_SECRET);
 
     if (!verifiedToken.success) {
         throw new AppError(status.UNAUTHORIZED, "Invalid refresh token");
@@ -170,7 +170,7 @@ const getNewToken = async (refreshToken: string, sessionToken: string): Promise<
             role: session.user.role,
             emailVerified: session.user.emailVerified,
         },
-        accessToken: newAccessToken,
+        token: newAccessToken,
         refreshToken: newRefreshToken,
         sessionToken,
     };
@@ -225,7 +225,7 @@ const changePassword = async (
             role: user.role,
             emailVerified: user.emailVerified,
         },
-        accessToken,
+        token: accessToken,
         refreshToken,
         sessionToken: session?.token || "",
     };
@@ -297,14 +297,17 @@ const resetPassword = async (email: string, otp: string, newPassword: string) =>
     return { message: "Password reset successfully" };
 };
 
-const googleLoginSuccess = async (session: any): Promise<IAuthResponse> => {
-    const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
+const googleLoginSuccess = async (sessionToken: string): Promise<IAuthResponse> => {
+    const session = await prisma.session.findUnique({
+        where: { token: sessionToken },
+        include: { user: true },
     });
 
-    if (!user) {
-        throw new AppError(status.NOT_FOUND, "User not found");
+    if (!session?.user) {
+        throw new AppError(status.UNAUTHORIZED, "Invalid session");
     }
+
+    const user = session.user;
 
     // Create nickname if not exists
     const existingNickname = await prisma.nickname.findUnique({
@@ -342,9 +345,9 @@ const googleLoginSuccess = async (session: any): Promise<IAuthResponse> => {
             role: user.role,
             emailVerified: user.emailVerified,
         },
-        accessToken,
+        token: accessToken,
         refreshToken,
-        sessionToken: session.session.token,
+        sessionToken: session.token,
     };
 };
 

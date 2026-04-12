@@ -9,7 +9,110 @@
 * 🟢 You can import this file directly.
 */
 
+export const UserRole = {
+  USER: 'USER',
+  CONSULTANT: 'CONSULTANT',
+  ADMIN: 'ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const PostStatus = {
+  ACTIVE: 'ACTIVE',
+  HIDDEN_BY_USER: 'HIDDEN_BY_USER',
+  UNDER_REVIEW: 'UNDER_REVIEW',
+  REMOVED: 'REMOVED'
+} as const
+
+export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus]
+
+
+export const PostVisibility = {
+  PUBLIC: 'PUBLIC',
+  CONSULTANTS_ONLY: 'CONSULTANTS_ONLY'
+} as const
+
+export type PostVisibility = (typeof PostVisibility)[keyof typeof PostVisibility]
+
+
+export const CommentStatus = {
+  ACTIVE: 'ACTIVE',
+  FLAGGED: 'FLAGGED',
+  REMOVED: 'REMOVED'
+} as const
+
+export type CommentStatus = (typeof CommentStatus)[keyof typeof CommentStatus]
+
+
+export const ReactionType = {
+  SUPPORT: 'SUPPORT',
+  HUG: 'HUG',
+  RELATE: 'RELATE',
+  THANKS: 'THANKS',
+  STRENGTH: 'STRENGTH'
+} as const
+
+export type ReactionType = (typeof ReactionType)[keyof typeof ReactionType]
+
+
+export const VerificationStatus = {
+  PENDING: 'PENDING',
+  VERIFIED: 'VERIFIED',
+  SUSPENDED: 'SUSPENDED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type VerificationStatus = (typeof VerificationStatus)[keyof typeof VerificationStatus]
+
+
+export const BookingStatus = {
+  PENDING: 'PENDING',
+  CONFIRMED: 'CONFIRMED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  NO_SHOW: 'NO_SHOW'
+} as const
+
+export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const ReportType = {
+  HARASSMENT: 'HARASSMENT',
+  MISINFORMATION: 'MISINFORMATION',
+  SPAM: 'SPAM',
+  IMPERSONATION: 'IMPERSONATION',
+  COPYRIGHT: 'COPYRIGHT',
+  SELF_HARM: 'SELF_HARM'
+} as const
+
+export type ReportType = (typeof ReportType)[keyof typeof ReportType]
+
+
+export const ReportStatus = {
+  OPEN: 'OPEN',
+  REVIEWED: 'REVIEWED',
+  DISMISSED: 'DISMISSED',
+  ESCALATED: 'ESCALATED'
+} as const
+
+export type ReportStatus = (typeof ReportStatus)[keyof typeof ReportStatus]
+
+
+export const SuspensionType = {
+  SHADOW_BAN: 'SHADOW_BAN',
+  TEMPORARY: 'TEMPORARY',
+  PERMANENT: 'PERMANENT'
+} as const
+
+export type SuspensionType = (typeof SuspensionType)[keyof typeof SuspensionType]

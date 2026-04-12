@@ -1,11 +1,11 @@
-import { Router } from "express";
+import express from "express";
 import { loginLimiter } from "../../middleware/rateLimiter";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { AuthController } from "./auth.controller";
 import { AuthValidation } from "./auth.validation";
 
-const router = Router();
+const router = express.Router();
 
 // Public routes
 router.post(
@@ -63,6 +63,7 @@ router.post(
 );
 
 // Google OAuth callback
+router.get("/google/success", AuthController.googleLoginSuccess);
 router.get("/google/callback", AuthController.googleLoginSuccess);
 
 export const AuthRoutes = router;

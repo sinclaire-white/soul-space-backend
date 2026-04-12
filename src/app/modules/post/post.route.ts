@@ -1,11 +1,11 @@
-import { Router } from "express";
+import express from "express";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { postLimiter } from "../../middleware/rateLimiter";
 import { PostController } from "./post.controller";
 import { PostValidation } from "./post.validation";
 
-const router = Router();
+const router = express.Router();
 
 // Public routes
 router.get("/", PostController.getAllPosts);
@@ -20,7 +20,7 @@ router.post(
     PostController.createPost
 );
 
-router.get("/me/posts", checkAuth(), PostController.getMyPosts);
+router.get("/my-posts", checkAuth(), PostController.getMyPosts);
 
 router.patch(
     "/:id",

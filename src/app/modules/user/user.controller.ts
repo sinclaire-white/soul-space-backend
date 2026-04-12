@@ -4,9 +4,14 @@ import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import { UserService } from "./user.service";
 import { IUserFilters } from "./user.interface";
+import { UserRole } from "../../../../prisma/generated/prisma/enums";
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-    const filters: IUserFilters = req.query;
+    const filters: IUserFilters = {
+        role: req.query.role as UserRole | undefined,
+        isActive: req.query.isActive ? (req.query.isActive === 'true') : undefined,
+        search: req.query.search as string | undefined,
+    };
     const result = await UserService.getAllUsers(filters);
 
     sendResponse(res, {
@@ -18,7 +23,7 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserById = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await UserService.getUserById(id);
 
     sendResponse(res, {
@@ -31,6 +36,9 @@ const getUserById = catchAsync(async (req: Request, res: Response) => {
 
 const getMyProfile = catchAsync(async (req: Request, res: Response) => {
     const userId = (req as any).user?.userId;
+    if (!userId) {
+        throw new Error("User not authenticated");
+    }
     const result = await UserService.getUserById(userId);
 
     sendResponse(res, {
@@ -43,6 +51,9 @@ const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 
 const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
     const userId = (req as any).user?.userId;
+    if (!userId) {
+        throw new Error("User not authenticated");
+    }
     const result = await UserService.updateUser(userId, req.body);
 
     sendResponse(res, {
@@ -54,8 +65,8 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUserRole = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { role } = req.body;
+    const id = req.params.id as string;
+    const role = req.body.role as UserRole;
     const result = await UserService.updateUserRole(id, role);
 
     sendResponse(res, {
@@ -67,7 +78,7 @@ const updateUserRole = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deactivateUser = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await UserService.deactivateUser(id);
 
     sendResponse(res, {
@@ -79,7 +90,7 @@ const deactivateUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const activateUser = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await UserService.activateUser(id);
 
     sendResponse(res, {

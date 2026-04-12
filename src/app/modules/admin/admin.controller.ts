@@ -67,7 +67,7 @@ const getAllUsers = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getUserById = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await AdminService.getUserById(id);
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -78,7 +78,7 @@ const getUserById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await AdminService.updateUser(id, req.body);
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -89,7 +89,7 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const moderateUser = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await AdminService.moderateUser(id, req.body);
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -111,7 +111,7 @@ const getAllPosts = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updatePost = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await AdminService.updatePost(id, req.body);
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -122,7 +122,7 @@ const updatePost = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deletePost = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await AdminService.deletePost(id);
     sendResponse(res, {
         httpStatusCode: status.OK,

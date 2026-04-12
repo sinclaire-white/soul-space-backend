@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express from "express";
 import { UserRole } from "../../../../prisma/generated/prisma/enums";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
@@ -6,7 +6,7 @@ import { reportLimiter } from "../../middleware/rateLimiter";
 import { ReportController } from "./report.controller";
 import { ReportValidation } from "./report.validation";
 
-const router = Router();
+const router = express.Router();
 
 // Protected routes - All authenticated users with rate limiting
 router.post(

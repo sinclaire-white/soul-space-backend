@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express from "express";
 import { UserRole } from "../../../../prisma/generated/prisma/enums";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
@@ -6,7 +6,7 @@ import { bookingLimiter } from "../../middleware/rateLimiter";
 import { BookingController } from "./booking.controller";
 import { BookingValidation } from "./booking.validation";
 
-const router = Router();
+const router = express.Router();
 
 // Client routes with rate limiting
 router.post(

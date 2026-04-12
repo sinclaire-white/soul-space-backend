@@ -59,7 +59,7 @@ const getMyReviews = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getReviewById = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await ReviewService.getReviewById(id);
 
     sendResponse(res, {
@@ -71,7 +71,7 @@ const getReviewById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateReview = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const clientId = (req as any).user?.userId;
     const result = await ReviewService.updateReview(id, clientId, req.body);
 
@@ -84,7 +84,7 @@ const updateReview = catchAsync(async (req: Request, res: Response) => {
 });
 
 const hideReview = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const consultantId = (req as any).user?.userId;
     const result = await ReviewService.hideReview(id, consultantId);
 

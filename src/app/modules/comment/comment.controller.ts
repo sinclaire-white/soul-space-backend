@@ -39,7 +39,7 @@ const getCommentsByPostId = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getCommentById = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await CommentService.getCommentById(id);
 
     sendResponse(res, {
@@ -51,7 +51,7 @@ const getCommentById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateComment = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const userId = (req as any).user?.userId;
     const result = await CommentService.updateComment(id, userId, req.body);
 
@@ -64,7 +64,7 @@ const updateComment = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteComment = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const userId = (req as any).user?.userId;
     const result = await CommentService.deleteComment(id, userId);
 

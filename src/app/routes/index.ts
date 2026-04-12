@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express from "express";
 import { AdminRoutes } from "../modules/admin/admin.route";
 import { AuthRoutes } from "../modules/auth/auth.route";
 import { AvailabilityRoutes } from "../modules/availability/availability.route";
@@ -12,7 +12,7 @@ import { ReportRoutes } from "../modules/report/report.route";
 import { ReviewRoutes } from "../modules/review/review.route";
 import { UserRoutes } from "../modules/user/user.route";
 
-const router = Router();
+const router = express.Router();
 
 router.use("/auth", AuthRoutes);
 router.use("/users", UserRoutes);

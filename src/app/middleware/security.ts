@@ -34,6 +34,8 @@ export const securityHeaders = helmet({
     xssFilter: true,
 });
 
+export const securityMiddleware = securityHeaders;
+
 // Sanitize request body to prevent NoSQL injection
 export const sanitizeInput = (req: Request, res: Response, next: NextFunction) => {
     if (req.body) {

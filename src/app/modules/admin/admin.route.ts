@@ -1,11 +1,11 @@
-import { Router } from "express";
-import { UserRole } from "../../../generated/prisma/enums";
+import express from "express";
+import { UserRole } from "../../../../prisma/generated/prisma/enums";
 import { checkAuth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { AdminController } from "./admin.controller";
 import { AdminValidation } from "./admin.validation";
 
-const router = Router();
+const router = express.Router();
 
 // All routes require admin or super admin
 router.use(checkAuth(UserRole.ADMIN, UserRole.SUPER_ADMIN));

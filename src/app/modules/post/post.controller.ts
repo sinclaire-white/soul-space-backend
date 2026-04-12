@@ -4,6 +4,7 @@ import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import { PostService } from "./post.service";
 import { IPostFilters } from "./post.interface";
+import { PostStatus, PostVisibility } from "../../../../prisma/generated/prisma/enums";
 
 const createPost = catchAsync(async (req: Request, res: Response) => {
     const userId = (req as any).user?.userId;
@@ -19,7 +20,12 @@ const createPost = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllPosts = catchAsync(async (req: Request, res: Response) => {
-    const filters: IPostFilters = req.query;
+    const filters: IPostFilters = {
+        status: req.query.status as PostStatus | undefined,
+        visibleTo: req.query.visibleTo as PostVisibility | undefined,
+        authorId: req.query.authorId as string | undefined,
+        isAnonymous: req.query.isAnonymous ? (req.query.isAnonymous === 'true') : undefined,
+    };
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const result = await PostService.getAllPosts(filters, page, limit);
@@ -39,7 +45,7 @@ const getAllPosts = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getPostById = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await PostService.getPostById(id);
 
     sendResponse(res, {
@@ -71,7 +77,7 @@ const getMyPosts = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updatePost = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const userId = (req as any).user?.userId;
     const result = await PostService.updatePost(id, userId, req.body);
 
@@ -84,7 +90,7 @@ const updatePost = catchAsync(async (req: Request, res: Response) => {
 });
 
 const hidePost = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const userId = (req as any).user?.userId;
     const result = await PostService.hidePost(id, userId);
 
@@ -97,7 +103,7 @@ const hidePost = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deletePost = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const userId = (req as any).user?.userId;
     const result = await PostService.deletePost(id, userId);
 
