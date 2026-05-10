@@ -47,11 +47,8 @@ export type CommentStatus = (typeof CommentStatus)[keyof typeof CommentStatus]
 
 
 export const ReactionType = {
-  SUPPORT: 'SUPPORT',
-  HUG: 'HUG',
-  RELATE: 'RELATE',
-  THANKS: 'THANKS',
-  STRENGTH: 'STRENGTH'
+  UPVOTE: 'UPVOTE',
+  DOWNVOTE: 'DOWNVOTE'
 } as const
 
 export type ReactionType = (typeof ReactionType)[keyof typeof ReactionType]
@@ -65,6 +62,15 @@ export const VerificationStatus = {
 } as const
 
 export type VerificationStatus = (typeof VerificationStatus)[keyof typeof VerificationStatus]
+
+
+export const ApplicationStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ApplicationStatus = (typeof ApplicationStatus)[keyof typeof ApplicationStatus]
 
 
 export const BookingStatus = {

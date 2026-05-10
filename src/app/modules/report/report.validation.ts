@@ -4,9 +4,7 @@ import { ReportType, ReportStatus } from "../../../../prisma/generated/prisma/en
 const createReportSchema = z.object({
     postId: z.string().optional(),
     commentId: z.string().optional(),
-    reportType: z.nativeEnum(ReportType, {
-        required_error: "Report type is required",
-    }),
+    reportType: z.nativeEnum(ReportType),
     notes: z.string().max(1000, "Notes must be at most 1000 characters").optional(),
 }).refine((data) => data.postId || data.commentId, {
     message: "Either postId or commentId must be provided",

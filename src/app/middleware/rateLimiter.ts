@@ -1,10 +1,10 @@
-import rateLimit from "express-rate-limit";
+import { ipKeyGenerator, rateLimit } from "express-rate-limit";
 import status from "http-status";
 
 // General API rate limiter
 export const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
+    max: process.env.NODE_ENV === "production" ? 300 : 1000, // generous in dev
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res) => {
@@ -28,8 +28,7 @@ export const postLimiter = rateLimit({
         });
     },
     keyGenerator: (req) => {
-        // Use user ID if available, otherwise IP
-        return (req as any).user?.userId || req.ip || "anonymous";
+        return req.user?.userId ?? ipKeyGenerator(req.ip ?? "::/56");
     },
 });
 
@@ -46,7 +45,7 @@ export const commentLimiter = rateLimit({
         });
     },
     keyGenerator: (req) => {
-        return (req as any).user?.userId || req.ip || "anonymous";
+        return req.user?.userId ?? ipKeyGenerator(req.ip ?? "::/56");
     },
 });
 
@@ -78,7 +77,7 @@ export const reactionLimiter = rateLimit({
         });
     },
     keyGenerator: (req) => {
-        return (req as any).user?.userId || req.ip || "anonymous";
+        return req.user?.userId ?? ipKeyGenerator(req.ip ?? "::/56");
     },
 });
 
@@ -95,7 +94,7 @@ export const reportLimiter = rateLimit({
         });
     },
     keyGenerator: (req) => {
-        return (req as any).user?.userId || req.ip || "anonymous";
+        return req.user?.userId ?? ipKeyGenerator(req.ip ?? "::/56");
     },
 });
 
@@ -112,6 +111,6 @@ export const bookingLimiter = rateLimit({
         });
     },
     keyGenerator: (req) => {
-        return (req as any).user?.userId || req.ip || "anonymous";
+        return req.user?.userId ?? ipKeyGenerator(req.ip ?? "::/56");
     },
 });

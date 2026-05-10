@@ -51,6 +51,13 @@ const updateNickname = async (
     userId: string,
     payload: INicknameUpdate
 ): Promise<INickname | null> => {
+    if (payload.handle) {
+        const existing = await prisma.nickname.findUnique({ where: { handle: payload.handle } });
+        if (existing && existing.userId !== userId) {
+            throw new AppError(status.CONFLICT, "Handle is already taken");
+        }
+    }
+
     const nickname = await prisma.nickname.update({
         where: { userId },
         data: payload,

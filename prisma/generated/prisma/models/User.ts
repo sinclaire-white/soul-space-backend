@@ -20,8 +20,18 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  age: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  age: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -30,9 +40,13 @@ export type UserMinAggregateOutputType = {
   emailVerified: boolean | null
   name: string | null
   image: string | null
+  phone: string | null
+  age: number | null
+  bio: string | null
   role: $Enums.UserRole | null
   isActive: boolean | null
   defaultPostVisibility: $Enums.PostVisibility | null
+  isProfilePublic: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   lastLoginAt: Date | null
@@ -44,9 +58,13 @@ export type UserMaxAggregateOutputType = {
   emailVerified: boolean | null
   name: string | null
   image: string | null
+  phone: string | null
+  age: number | null
+  bio: string | null
   role: $Enums.UserRole | null
   isActive: boolean | null
   defaultPostVisibility: $Enums.PostVisibility | null
+  isProfilePublic: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   lastLoginAt: Date | null
@@ -58,9 +76,13 @@ export type UserCountAggregateOutputType = {
   emailVerified: number
   name: number
   image: number
+  phone: number
+  age: number
+  bio: number
   role: number
   isActive: number
   defaultPostVisibility: number
+  isProfilePublic: number
   createdAt: number
   updatedAt: number
   lastLoginAt: number
@@ -68,15 +90,27 @@ export type UserCountAggregateOutputType = {
 }
 
 
+export type UserAvgAggregateInputType = {
+  age?: true
+}
+
+export type UserSumAggregateInputType = {
+  age?: true
+}
+
 export type UserMinAggregateInputType = {
   id?: true
   email?: true
   emailVerified?: true
   name?: true
   image?: true
+  phone?: true
+  age?: true
+  bio?: true
   role?: true
   isActive?: true
   defaultPostVisibility?: true
+  isProfilePublic?: true
   createdAt?: true
   updatedAt?: true
   lastLoginAt?: true
@@ -88,9 +122,13 @@ export type UserMaxAggregateInputType = {
   emailVerified?: true
   name?: true
   image?: true
+  phone?: true
+  age?: true
+  bio?: true
   role?: true
   isActive?: true
   defaultPostVisibility?: true
+  isProfilePublic?: true
   createdAt?: true
   updatedAt?: true
   lastLoginAt?: true
@@ -102,9 +140,13 @@ export type UserCountAggregateInputType = {
   emailVerified?: true
   name?: true
   image?: true
+  phone?: true
+  age?: true
+  bio?: true
   role?: true
   isActive?: true
   defaultPostVisibility?: true
+  isProfilePublic?: true
   createdAt?: true
   updatedAt?: true
   lastLoginAt?: true
@@ -149,6 +191,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -179,6 +233,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -189,13 +245,19 @@ export type UserGroupByOutputType = {
   emailVerified: boolean
   name: string | null
   image: string | null
+  phone: string | null
+  age: number | null
+  bio: string | null
   role: $Enums.UserRole
   isActive: boolean
   defaultPostVisibility: $Enums.PostVisibility
+  isProfilePublic: boolean
   createdAt: Date
   updatedAt: Date
   lastLoginAt: Date | null
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -224,9 +286,13 @@ export type UserWhereInput = {
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   name?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
+  phone?: Prisma.StringNullableFilter<"User"> | string | null
+  age?: Prisma.IntNullableFilter<"User"> | number | null
+  bio?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   isActive?: Prisma.BoolFilter<"User"> | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFilter<"User"> | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -237,6 +303,8 @@ export type UserWhereInput = {
   comments?: Prisma.CommentListRelationFilter
   reactions?: Prisma.ReactionListRelationFilter
   consultant?: Prisma.XOR<Prisma.ConsultantNullableScalarRelationFilter, Prisma.ConsultantWhereInput> | null
+  consultantApplications?: Prisma.ConsultantApplicationListRelationFilter
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationListRelationFilter
   clientBookings?: Prisma.BookingListRelationFilter
   reviewsGiven?: Prisma.ReviewListRelationFilter
   reportsMade?: Prisma.ReportListRelationFilter
@@ -249,9 +317,13 @@ export type UserOrderByWithRelationInput = {
   emailVerified?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  age?: Prisma.SortOrderInput | Prisma.SortOrder
+  bio?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   defaultPostVisibility?: Prisma.SortOrder
+  isProfilePublic?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -262,6 +334,8 @@ export type UserOrderByWithRelationInput = {
   comments?: Prisma.CommentOrderByRelationAggregateInput
   reactions?: Prisma.ReactionOrderByRelationAggregateInput
   consultant?: Prisma.ConsultantOrderByWithRelationInput
+  consultantApplications?: Prisma.ConsultantApplicationOrderByRelationAggregateInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationOrderByRelationAggregateInput
   clientBookings?: Prisma.BookingOrderByRelationAggregateInput
   reviewsGiven?: Prisma.ReviewOrderByRelationAggregateInput
   reportsMade?: Prisma.ReportOrderByRelationAggregateInput
@@ -277,9 +351,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   emailVerified?: Prisma.BoolFilter<"User"> | boolean
   name?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
+  phone?: Prisma.StringNullableFilter<"User"> | string | null
+  age?: Prisma.IntNullableFilter<"User"> | number | null
+  bio?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
   isActive?: Prisma.BoolFilter<"User"> | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFilter<"User"> | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -290,6 +368,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   comments?: Prisma.CommentListRelationFilter
   reactions?: Prisma.ReactionListRelationFilter
   consultant?: Prisma.XOR<Prisma.ConsultantNullableScalarRelationFilter, Prisma.ConsultantWhereInput> | null
+  consultantApplications?: Prisma.ConsultantApplicationListRelationFilter
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationListRelationFilter
   clientBookings?: Prisma.BookingListRelationFilter
   reviewsGiven?: Prisma.ReviewListRelationFilter
   reportsMade?: Prisma.ReportListRelationFilter
@@ -302,15 +382,21 @@ export type UserOrderByWithAggregationInput = {
   emailVerified?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  age?: Prisma.SortOrderInput | Prisma.SortOrder
+  bio?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   defaultPostVisibility?: Prisma.SortOrder
+  isProfilePublic?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -322,9 +408,13 @@ export type UserScalarWhereWithAggregatesInput = {
   emailVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  age?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
+  bio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityWithAggregatesFilter<"User"> | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -336,9 +426,13 @@ export type UserCreateInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -349,6 +443,8 @@ export type UserCreateInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
@@ -361,9 +457,13 @@ export type UserUncheckedCreateInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -374,6 +474,8 @@ export type UserUncheckedCreateInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
@@ -386,9 +488,13 @@ export type UserUpdateInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -399,6 +505,8 @@ export type UserUpdateInput = {
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
@@ -411,9 +519,13 @@ export type UserUncheckedUpdateInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -424,6 +536,8 @@ export type UserUncheckedUpdateInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -436,9 +550,13 @@ export type UserCreateManyInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -450,9 +568,13 @@ export type UserUpdateManyMutationInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -464,9 +586,13 @@ export type UserUncheckedUpdateManyInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -478,12 +604,20 @@ export type UserCountOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  age?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   defaultPostVisibility?: Prisma.SortOrder
+  isProfilePublic?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  age?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -492,9 +626,13 @@ export type UserMaxOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  age?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   defaultPostVisibility?: Prisma.SortOrder
+  isProfilePublic?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
@@ -506,17 +644,30 @@ export type UserMinOrderByAggregateInput = {
   emailVerified?: Prisma.SortOrder
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  age?: Prisma.SortOrder
+  bio?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   defaultPostVisibility?: Prisma.SortOrder
+  isProfilePublic?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   lastLoginAt?: Prisma.SortOrder
 }
 
+export type UserSumOrderByAggregateInput = {
+  age?: Prisma.SortOrder
+}
+
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -529,6 +680,14 @@ export type BoolFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type EnumUserRoleFieldUpdateOperationsInput = {
@@ -631,6 +790,36 @@ export type UserUpdateOneRequiredWithoutConsultantNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutConsultantInput, Prisma.UserUpdateWithoutConsultantInput>, Prisma.UserUncheckedUpdateWithoutConsultantInput>
 }
 
+export type UserCreateNestedOneWithoutConsultantApplicationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutConsultantApplicationsInput, Prisma.UserUncheckedCreateWithoutConsultantApplicationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutConsultantApplicationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReviewedConsultantApplicationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedConsultantApplicationsInput, Prisma.UserUncheckedCreateWithoutReviewedConsultantApplicationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedConsultantApplicationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutConsultantApplicationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutConsultantApplicationsInput, Prisma.UserUncheckedCreateWithoutConsultantApplicationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutConsultantApplicationsInput
+  upsert?: Prisma.UserUpsertWithoutConsultantApplicationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutConsultantApplicationsInput, Prisma.UserUpdateWithoutConsultantApplicationsInput>, Prisma.UserUncheckedUpdateWithoutConsultantApplicationsInput>
+}
+
+export type UserUpdateOneWithoutReviewedConsultantApplicationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedConsultantApplicationsInput, Prisma.UserUncheckedCreateWithoutReviewedConsultantApplicationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedConsultantApplicationsInput
+  upsert?: Prisma.UserUpsertWithoutReviewedConsultantApplicationsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewedConsultantApplicationsInput, Prisma.UserUpdateWithoutReviewedConsultantApplicationsInput>, Prisma.UserUncheckedUpdateWithoutReviewedConsultantApplicationsInput>
+}
+
 export type UserCreateNestedOneWithoutReportsMadeInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutReportsMadeInput, Prisma.UserUncheckedCreateWithoutReportsMadeInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutReportsMadeInput
@@ -707,9 +896,13 @@ export type UserCreateWithoutSessionsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -719,6 +912,8 @@ export type UserCreateWithoutSessionsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
@@ -731,9 +926,13 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -743,6 +942,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
@@ -771,9 +972,13 @@ export type UserUpdateWithoutSessionsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -783,6 +988,8 @@ export type UserUpdateWithoutSessionsInput = {
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
@@ -795,9 +1002,13 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -807,6 +1018,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -819,9 +1032,13 @@ export type UserCreateWithoutAccountsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -831,6 +1048,8 @@ export type UserCreateWithoutAccountsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
@@ -843,9 +1062,13 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -855,6 +1078,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
@@ -883,9 +1108,13 @@ export type UserUpdateWithoutAccountsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -895,6 +1124,8 @@ export type UserUpdateWithoutAccountsInput = {
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
@@ -907,9 +1138,13 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -919,6 +1154,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -931,9 +1168,13 @@ export type UserCreateWithoutClientBookingsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -944,6 +1185,8 @@ export type UserCreateWithoutClientBookingsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
   suspension?: Prisma.UserSuspensionCreateNestedOneWithoutUserInput
@@ -955,9 +1198,13 @@ export type UserUncheckedCreateWithoutClientBookingsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -968,6 +1215,8 @@ export type UserUncheckedCreateWithoutClientBookingsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   suspension?: Prisma.UserSuspensionUncheckedCreateNestedOneWithoutUserInput
@@ -995,9 +1244,13 @@ export type UserUpdateWithoutClientBookingsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1008,6 +1261,8 @@ export type UserUpdateWithoutClientBookingsInput = {
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   suspension?: Prisma.UserSuspensionUpdateOneWithoutUserNestedInput
@@ -1019,9 +1274,13 @@ export type UserUncheckedUpdateWithoutClientBookingsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1032,6 +1291,8 @@ export type UserUncheckedUpdateWithoutClientBookingsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   suspension?: Prisma.UserSuspensionUncheckedUpdateOneWithoutUserNestedInput
@@ -1043,9 +1304,13 @@ export type UserCreateWithoutReviewsGivenInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1056,6 +1321,8 @@ export type UserCreateWithoutReviewsGivenInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
   suspension?: Prisma.UserSuspensionCreateNestedOneWithoutUserInput
@@ -1067,9 +1334,13 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1080,6 +1351,8 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
   suspension?: Prisma.UserSuspensionUncheckedCreateNestedOneWithoutUserInput
@@ -1107,9 +1380,13 @@ export type UserUpdateWithoutReviewsGivenInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1120,6 +1397,8 @@ export type UserUpdateWithoutReviewsGivenInput = {
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
   suspension?: Prisma.UserSuspensionUpdateOneWithoutUserNestedInput
@@ -1131,9 +1410,13 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1144,6 +1427,8 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
   suspension?: Prisma.UserSuspensionUncheckedUpdateOneWithoutUserNestedInput
@@ -1155,9 +1440,13 @@ export type UserCreateWithoutCommentsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1167,6 +1456,8 @@ export type UserCreateWithoutCommentsInput = {
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
@@ -1179,9 +1470,13 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1191,6 +1486,8 @@ export type UserUncheckedCreateWithoutCommentsInput = {
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
@@ -1219,9 +1516,13 @@ export type UserUpdateWithoutCommentsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1231,6 +1532,8 @@ export type UserUpdateWithoutCommentsInput = {
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
@@ -1243,9 +1546,13 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1255,6 +1562,8 @@ export type UserUncheckedUpdateWithoutCommentsInput = {
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1267,9 +1576,13 @@ export type UserCreateWithoutConsultantInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1279,6 +1592,8 @@ export type UserCreateWithoutConsultantInput = {
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
@@ -1291,9 +1606,13 @@ export type UserUncheckedCreateWithoutConsultantInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1303,6 +1622,8 @@ export type UserUncheckedCreateWithoutConsultantInput = {
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
@@ -1331,9 +1652,13 @@ export type UserUpdateWithoutConsultantInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1343,6 +1668,8 @@ export type UserUpdateWithoutConsultantInput = {
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
@@ -1355,9 +1682,13 @@ export type UserUncheckedUpdateWithoutConsultantInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1367,6 +1698,280 @@ export type UserUncheckedUpdateWithoutConsultantInput = {
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  suspension?: Prisma.UserSuspensionUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutConsultantApplicationsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  name?: string | null
+  image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
+  role?: $Enums.UserRole
+  isActive?: boolean
+  defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLoginAt?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  nickname?: Prisma.NicknameCreateNestedOneWithoutUserInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
+  consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
+  clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  suspension?: Prisma.UserSuspensionCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutConsultantApplicationsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  name?: string | null
+  image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
+  role?: $Enums.UserRole
+  isActive?: boolean
+  defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLoginAt?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  nickname?: Prisma.NicknameUncheckedCreateNestedOneWithoutUserInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
+  consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
+  clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  suspension?: Prisma.UserSuspensionUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutConsultantApplicationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutConsultantApplicationsInput, Prisma.UserUncheckedCreateWithoutConsultantApplicationsInput>
+}
+
+export type UserCreateWithoutReviewedConsultantApplicationsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  name?: string | null
+  image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
+  role?: $Enums.UserRole
+  isActive?: boolean
+  defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLoginAt?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  nickname?: Prisma.NicknameCreateNestedOneWithoutUserInput
+  posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
+  consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
+  reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
+  suspension?: Prisma.UserSuspensionCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutReviewedConsultantApplicationsInput = {
+  id?: string
+  email: string
+  emailVerified?: boolean
+  name?: string | null
+  image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
+  role?: $Enums.UserRole
+  isActive?: boolean
+  defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  lastLoginAt?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  nickname?: Prisma.NicknameUncheckedCreateNestedOneWithoutUserInput
+  posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
+  comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
+  reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
+  consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
+  reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
+  suspension?: Prisma.UserSuspensionUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutReviewedConsultantApplicationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedConsultantApplicationsInput, Prisma.UserUncheckedCreateWithoutReviewedConsultantApplicationsInput>
+}
+
+export type UserUpsertWithoutConsultantApplicationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutConsultantApplicationsInput, Prisma.UserUncheckedUpdateWithoutConsultantApplicationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutConsultantApplicationsInput, Prisma.UserUncheckedCreateWithoutConsultantApplicationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutConsultantApplicationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutConsultantApplicationsInput, Prisma.UserUncheckedUpdateWithoutConsultantApplicationsInput>
+}
+
+export type UserUpdateWithoutConsultantApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  nickname?: Prisma.NicknameUpdateOneWithoutUserNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
+  consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
+  clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  suspension?: Prisma.UserSuspensionUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutConsultantApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  nickname?: Prisma.NicknameUncheckedUpdateOneWithoutUserNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
+  consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
+  clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
+  reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
+  suspension?: Prisma.UserSuspensionUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutReviewedConsultantApplicationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewedConsultantApplicationsInput, Prisma.UserUncheckedUpdateWithoutReviewedConsultantApplicationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedConsultantApplicationsInput, Prisma.UserUncheckedCreateWithoutReviewedConsultantApplicationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewedConsultantApplicationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewedConsultantApplicationsInput, Prisma.UserUncheckedUpdateWithoutReviewedConsultantApplicationsInput>
+}
+
+export type UserUpdateWithoutReviewedConsultantApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  nickname?: Prisma.NicknameUpdateOneWithoutUserNestedInput
+  posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
+  consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
+  reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
+  suspension?: Prisma.UserSuspensionUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewedConsultantApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  nickname?: Prisma.NicknameUncheckedUpdateOneWithoutUserNestedInput
+  posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
+  comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
+  reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
+  consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1379,9 +1984,13 @@ export type UserCreateWithoutReportsMadeInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1392,6 +2001,8 @@ export type UserCreateWithoutReportsMadeInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   suspension?: Prisma.UserSuspensionCreateNestedOneWithoutUserInput
@@ -1403,9 +2014,13 @@ export type UserUncheckedCreateWithoutReportsMadeInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1416,6 +2031,8 @@ export type UserUncheckedCreateWithoutReportsMadeInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   suspension?: Prisma.UserSuspensionUncheckedCreateNestedOneWithoutUserInput
@@ -1443,9 +2060,13 @@ export type UserUpdateWithoutReportsMadeInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1456,6 +2077,8 @@ export type UserUpdateWithoutReportsMadeInput = {
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   suspension?: Prisma.UserSuspensionUpdateOneWithoutUserNestedInput
@@ -1467,9 +2090,13 @@ export type UserUncheckedUpdateWithoutReportsMadeInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1480,6 +2107,8 @@ export type UserUncheckedUpdateWithoutReportsMadeInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   suspension?: Prisma.UserSuspensionUncheckedUpdateOneWithoutUserNestedInput
@@ -1491,9 +2120,13 @@ export type UserCreateWithoutSuspensionInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1504,6 +2137,8 @@ export type UserCreateWithoutSuspensionInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
@@ -1515,9 +2150,13 @@ export type UserUncheckedCreateWithoutSuspensionInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1528,6 +2167,8 @@ export type UserUncheckedCreateWithoutSuspensionInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
@@ -1555,9 +2196,13 @@ export type UserUpdateWithoutSuspensionInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1568,6 +2213,8 @@ export type UserUpdateWithoutSuspensionInput = {
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
@@ -1579,9 +2226,13 @@ export type UserUncheckedUpdateWithoutSuspensionInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1592,6 +2243,8 @@ export type UserUncheckedUpdateWithoutSuspensionInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1603,9 +2256,13 @@ export type UserCreateWithoutPostsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1615,6 +2272,8 @@ export type UserCreateWithoutPostsInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
@@ -1627,9 +2286,13 @@ export type UserUncheckedCreateWithoutPostsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1639,6 +2302,8 @@ export type UserUncheckedCreateWithoutPostsInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
@@ -1667,9 +2332,13 @@ export type UserUpdateWithoutPostsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1679,6 +2348,8 @@ export type UserUpdateWithoutPostsInput = {
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
@@ -1691,9 +2362,13 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1703,6 +2378,8 @@ export type UserUncheckedUpdateWithoutPostsInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1715,9 +2392,13 @@ export type UserCreateWithoutReactionsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1727,6 +2408,8 @@ export type UserCreateWithoutReactionsInput = {
   posts?: Prisma.PostCreateNestedManyWithoutAuthorInput
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
@@ -1739,9 +2422,13 @@ export type UserUncheckedCreateWithoutReactionsInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1751,6 +2438,8 @@ export type UserUncheckedCreateWithoutReactionsInput = {
   posts?: Prisma.PostUncheckedCreateNestedManyWithoutAuthorInput
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
@@ -1779,9 +2468,13 @@ export type UserUpdateWithoutReactionsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1791,6 +2484,8 @@ export type UserUpdateWithoutReactionsInput = {
   posts?: Prisma.PostUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
@@ -1803,9 +2498,13 @@ export type UserUncheckedUpdateWithoutReactionsInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1815,6 +2514,8 @@ export type UserUncheckedUpdateWithoutReactionsInput = {
   posts?: Prisma.PostUncheckedUpdateManyWithoutAuthorNestedInput
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1827,9 +2528,13 @@ export type UserCreateWithoutNicknameInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1839,6 +2544,8 @@ export type UserCreateWithoutNicknameInput = {
   comments?: Prisma.CommentCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportCreateNestedManyWithoutReporterInput
@@ -1851,9 +2558,13 @@ export type UserUncheckedCreateWithoutNicknameInput = {
   emailVerified?: boolean
   name?: string | null
   image?: string | null
+  phone?: string | null
+  age?: number | null
+  bio?: string | null
   role?: $Enums.UserRole
   isActive?: boolean
   defaultPostVisibility?: $Enums.PostVisibility
+  isProfilePublic?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   lastLoginAt?: Date | string | null
@@ -1863,6 +2574,8 @@ export type UserUncheckedCreateWithoutNicknameInput = {
   comments?: Prisma.CommentUncheckedCreateNestedManyWithoutAuthorInput
   reactions?: Prisma.ReactionUncheckedCreateNestedManyWithoutUserInput
   consultant?: Prisma.ConsultantUncheckedCreateNestedOneWithoutUserInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutUserInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedCreateNestedManyWithoutReviewedByInput
   clientBookings?: Prisma.BookingUncheckedCreateNestedManyWithoutClientInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutClientInput
   reportsMade?: Prisma.ReportUncheckedCreateNestedManyWithoutReporterInput
@@ -1891,9 +2604,13 @@ export type UserUpdateWithoutNicknameInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1903,6 +2620,8 @@ export type UserUpdateWithoutNicknameInput = {
   comments?: Prisma.CommentUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUpdateManyWithoutReporterNestedInput
@@ -1915,9 +2634,13 @@ export type UserUncheckedUpdateWithoutNicknameInput = {
   emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  age?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   defaultPostVisibility?: Prisma.EnumPostVisibilityFieldUpdateOperationsInput | $Enums.PostVisibility
+  isProfilePublic?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1927,6 +2650,8 @@ export type UserUncheckedUpdateWithoutNicknameInput = {
   comments?: Prisma.CommentUncheckedUpdateManyWithoutAuthorNestedInput
   reactions?: Prisma.ReactionUncheckedUpdateManyWithoutUserNestedInput
   consultant?: Prisma.ConsultantUncheckedUpdateOneWithoutUserNestedInput
+  consultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutUserNestedInput
+  reviewedConsultantApplications?: Prisma.ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   clientBookings?: Prisma.BookingUncheckedUpdateManyWithoutClientNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutClientNestedInput
   reportsMade?: Prisma.ReportUncheckedUpdateManyWithoutReporterNestedInput
@@ -1944,6 +2669,8 @@ export type UserCountOutputType = {
   posts: number
   comments: number
   reactions: number
+  consultantApplications: number
+  reviewedConsultantApplications: number
   clientBookings: number
   reviewsGiven: number
   reportsMade: number
@@ -1955,6 +2682,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   posts?: boolean | UserCountOutputTypeCountPostsArgs
   comments?: boolean | UserCountOutputTypeCountCommentsArgs
   reactions?: boolean | UserCountOutputTypeCountReactionsArgs
+  consultantApplications?: boolean | UserCountOutputTypeCountConsultantApplicationsArgs
+  reviewedConsultantApplications?: boolean | UserCountOutputTypeCountReviewedConsultantApplicationsArgs
   clientBookings?: boolean | UserCountOutputTypeCountClientBookingsArgs
   reviewsGiven?: boolean | UserCountOutputTypeCountReviewsGivenArgs
   reportsMade?: boolean | UserCountOutputTypeCountReportsMadeArgs
@@ -2008,6 +2737,20 @@ export type UserCountOutputTypeCountReactionsArgs<ExtArgs extends runtime.Types.
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountConsultantApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ConsultantApplicationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewedConsultantApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ConsultantApplicationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountClientBookingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.BookingWhereInput
 }
@@ -2033,9 +2776,13 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   emailVerified?: boolean
   name?: boolean
   image?: boolean
+  phone?: boolean
+  age?: boolean
+  bio?: boolean
   role?: boolean
   isActive?: boolean
   defaultPostVisibility?: boolean
+  isProfilePublic?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lastLoginAt?: boolean
@@ -2046,6 +2793,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   reactions?: boolean | Prisma.User$reactionsArgs<ExtArgs>
   consultant?: boolean | Prisma.User$consultantArgs<ExtArgs>
+  consultantApplications?: boolean | Prisma.User$consultantApplicationsArgs<ExtArgs>
+  reviewedConsultantApplications?: boolean | Prisma.User$reviewedConsultantApplicationsArgs<ExtArgs>
   clientBookings?: boolean | Prisma.User$clientBookingsArgs<ExtArgs>
   reviewsGiven?: boolean | Prisma.User$reviewsGivenArgs<ExtArgs>
   reportsMade?: boolean | Prisma.User$reportsMadeArgs<ExtArgs>
@@ -2059,9 +2808,13 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   emailVerified?: boolean
   name?: boolean
   image?: boolean
+  phone?: boolean
+  age?: boolean
+  bio?: boolean
   role?: boolean
   isActive?: boolean
   defaultPostVisibility?: boolean
+  isProfilePublic?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lastLoginAt?: boolean
@@ -2073,9 +2826,13 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   emailVerified?: boolean
   name?: boolean
   image?: boolean
+  phone?: boolean
+  age?: boolean
+  bio?: boolean
   role?: boolean
   isActive?: boolean
   defaultPostVisibility?: boolean
+  isProfilePublic?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lastLoginAt?: boolean
@@ -2087,15 +2844,19 @@ export type UserSelectScalar = {
   emailVerified?: boolean
   name?: boolean
   image?: boolean
+  phone?: boolean
+  age?: boolean
+  bio?: boolean
   role?: boolean
   isActive?: boolean
   defaultPostVisibility?: boolean
+  isProfilePublic?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   lastLoginAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerified" | "name" | "image" | "role" | "isActive" | "defaultPostVisibility" | "createdAt" | "updatedAt" | "lastLoginAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerified" | "name" | "image" | "phone" | "age" | "bio" | "role" | "isActive" | "defaultPostVisibility" | "isProfilePublic" | "createdAt" | "updatedAt" | "lastLoginAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
@@ -2104,6 +2865,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   comments?: boolean | Prisma.User$commentsArgs<ExtArgs>
   reactions?: boolean | Prisma.User$reactionsArgs<ExtArgs>
   consultant?: boolean | Prisma.User$consultantArgs<ExtArgs>
+  consultantApplications?: boolean | Prisma.User$consultantApplicationsArgs<ExtArgs>
+  reviewedConsultantApplications?: boolean | Prisma.User$reviewedConsultantApplicationsArgs<ExtArgs>
   clientBookings?: boolean | Prisma.User$clientBookingsArgs<ExtArgs>
   reviewsGiven?: boolean | Prisma.User$reviewsGivenArgs<ExtArgs>
   reportsMade?: boolean | Prisma.User$reportsMadeArgs<ExtArgs>
@@ -2123,6 +2886,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     comments: Prisma.$CommentPayload<ExtArgs>[]
     reactions: Prisma.$ReactionPayload<ExtArgs>[]
     consultant: Prisma.$ConsultantPayload<ExtArgs> | null
+    consultantApplications: Prisma.$ConsultantApplicationPayload<ExtArgs>[]
+    reviewedConsultantApplications: Prisma.$ConsultantApplicationPayload<ExtArgs>[]
     clientBookings: Prisma.$BookingPayload<ExtArgs>[]
     reviewsGiven: Prisma.$ReviewPayload<ExtArgs>[]
     reportsMade: Prisma.$ReportPayload<ExtArgs>[]
@@ -2134,9 +2899,13 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     emailVerified: boolean
     name: string | null
     image: string | null
+    phone: string | null
+    age: number | null
+    bio: string | null
     role: $Enums.UserRole
     isActive: boolean
     defaultPostVisibility: $Enums.PostVisibility
+    isProfilePublic: boolean
     createdAt: Date
     updatedAt: Date
     lastLoginAt: Date | null
@@ -2541,6 +3310,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   comments<T extends Prisma.User$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reactions<T extends Prisma.User$reactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   consultant<T extends Prisma.User$consultantArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$consultantArgs<ExtArgs>>): Prisma.Prisma__ConsultantClient<runtime.Types.Result.GetResult<Prisma.$ConsultantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  consultantApplications<T extends Prisma.User$consultantApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$consultantApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConsultantApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewedConsultantApplications<T extends Prisma.User$reviewedConsultantApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedConsultantApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConsultantApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   clientBookings<T extends Prisma.User$clientBookingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$clientBookingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviewsGiven<T extends Prisma.User$reviewsGivenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reportsMade<T extends Prisma.User$reportsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reportsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2579,9 +3350,13 @@ export interface UserFieldRefs {
   readonly emailVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly image: Prisma.FieldRef<"User", 'String'>
+  readonly phone: Prisma.FieldRef<"User", 'String'>
+  readonly age: Prisma.FieldRef<"User", 'Int'>
+  readonly bio: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly defaultPostVisibility: Prisma.FieldRef<"User", 'PostVisibility'>
+  readonly isProfilePublic: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -3133,6 +3908,54 @@ export type User$consultantArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.ConsultantInclude<ExtArgs> | null
   where?: Prisma.ConsultantWhereInput
+}
+
+/**
+ * User.consultantApplications
+ */
+export type User$consultantApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ConsultantApplication
+   */
+  select?: Prisma.ConsultantApplicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ConsultantApplication
+   */
+  omit?: Prisma.ConsultantApplicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConsultantApplicationInclude<ExtArgs> | null
+  where?: Prisma.ConsultantApplicationWhereInput
+  orderBy?: Prisma.ConsultantApplicationOrderByWithRelationInput | Prisma.ConsultantApplicationOrderByWithRelationInput[]
+  cursor?: Prisma.ConsultantApplicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ConsultantApplicationScalarFieldEnum | Prisma.ConsultantApplicationScalarFieldEnum[]
+}
+
+/**
+ * User.reviewedConsultantApplications
+ */
+export type User$reviewedConsultantApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ConsultantApplication
+   */
+  select?: Prisma.ConsultantApplicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ConsultantApplication
+   */
+  omit?: Prisma.ConsultantApplicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConsultantApplicationInclude<ExtArgs> | null
+  where?: Prisma.ConsultantApplicationWhereInput
+  orderBy?: Prisma.ConsultantApplicationOrderByWithRelationInput | Prisma.ConsultantApplicationOrderByWithRelationInput[]
+  cursor?: Prisma.ConsultantApplicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ConsultantApplicationScalarFieldEnum | Prisma.ConsultantApplicationScalarFieldEnum[]
 }
 
 /**

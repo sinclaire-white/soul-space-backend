@@ -24,5 +24,5 @@ export interface IAuthResponse {
     };
     token: string;
     refreshToken: string;
-    sessionToken: string;
+    sessionToken: string | null;
 }

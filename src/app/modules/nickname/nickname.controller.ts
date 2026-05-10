@@ -32,7 +32,7 @@ const getMyNickname = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getNicknameByHandle = catchAsync(async (req: Request, res: Response) => {
-    const { handle } = req.params;
+    const handle = req.params.handle as string;
     const result = await NicknameService.getNicknameByHandle(handle);
 
     sendResponse(res, {
@@ -69,7 +69,7 @@ const rotateMyNickname = catchAsync(async (req: Request, res: Response) => {
 });
 
 const checkHandleAvailability = catchAsync(async (req: Request, res: Response) => {
-    const { handle } = req.params;
+    const handle = req.params.handle as string;
     const isAvailable = await NicknameService.checkHandleAvailability(handle);
 
     sendResponse(res, {

@@ -54,7 +54,14 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
     if (!userId) {
         throw new Error("User not authenticated");
     }
-    const result = await UserService.updateUser(userId, req.body);
+
+    // Parse body fields from multipart form data if sent as JSON string
+    let body = req.body;
+    if (typeof body.data === "string") {
+        body = JSON.parse(body.data);
+    }
+
+    const result = await UserService.updateUser(userId, body, req.file);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -101,6 +108,23 @@ const activateUser = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const getPublicProfile = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    const result = await UserService.getPublicProfile(id);
+
+    if (!result) {
+        sendResponse(res, { httpStatusCode: status.NOT_FOUND, success: false, message: "User not found", data: null });
+        return;
+    }
+
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Public profile retrieved successfully",
+        data: result,
+    });
+});
+
 export const UserController = {
     getAllUsers,
     getUserById,
@@ -109,4 +133,5 @@ export const UserController = {
     updateUserRole,
     deactivateUser,
     activateUser,
+    getPublicProfile,
 };

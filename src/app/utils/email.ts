@@ -3,22 +3,32 @@ import ejs from "ejs";
 import status from "http-status";
 import nodemailer from "nodemailer";
 import path from "path";
-import { fileURLToPath } from "url";
 import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppError";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const isEmailConfigured = () => Boolean(
+    envVars.SMTP_HOST &&
+    envVars.SMTP_PORT &&
+    envVars.SMTP_USER &&
+    envVars.SMTP_PASS &&
+    envVars.SMTP_FROM
+);
 
-const transporter = nodemailer.createTransport({
-    host: envVars.SMTP_HOST,
-    secure: true,
-    auth: {
-        user: envVars.SMTP_USER,
-        pass: envVars.SMTP_PASS
-    },
-    port: Number(envVars.SMTP_PORT)
-})
+const getTransporter = () => {
+    if (!isEmailConfigured()) {
+        throw new AppError(status.INTERNAL_SERVER_ERROR, "Email service is not configured");
+    }
+
+    return nodemailer.createTransport({
+        host: envVars.SMTP_HOST,
+        secure: Number(envVars.SMTP_PORT) === 465,
+        auth: {
+            user: envVars.SMTP_USER,
+            pass: envVars.SMTP_PASS
+        },
+        port: Number(envVars.SMTP_PORT)
+    })
+}
 
 interface SendEmailOptions {
     to: string;
@@ -34,6 +44,16 @@ interface SendEmailOptions {
 
 export const sendEmail = async ({ subject, templateData, templateName, to, attachments }: SendEmailOptions) => {
     try {
+        if (!isEmailConfigured()) {
+            if (envVars.NODE_ENV !== "production") {
+                console.warn(`Email service not configured. Skipping email to ${to} with subject \"${subject}\".`);
+                return;
+            }
+
+            throw new AppError(status.INTERNAL_SERVER_ERROR, "Email service is not configured");
+        }
+
+        const transporter = getTransporter();
         const templatePath = path.resolve(process.cwd(), `src/app/templates/${templateName}.ejs`);
 
         const html = await ejs.renderFile(templatePath, templateData);
@@ -53,6 +73,12 @@ export const sendEmail = async ({ subject, templateData, templateName, to, attac
         console.log(`Email sent to ${to} : ${info.messageId}`);
     } catch (error: any) {
         console.log("Email Sending Error", error.message);
+
+        if (envVars.NODE_ENV !== "production") {
+            console.warn(`Continuing without email delivery in ${envVars.NODE_ENV} mode.`);
+            return;
+        }
+
         throw new AppError(status.INTERNAL_SERVER_ERROR, "Failed to send email");
     }
 }

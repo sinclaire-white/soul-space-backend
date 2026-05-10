@@ -1,0 +1,25 @@
+model ConsultantApplication {
+  id                      String            @id @default(cuid())
+  userId                  String            @db.VarChar
+  status                  ApplicationStatus @default(PENDING)
+  fullName                String            @db.VarChar(255)
+  email                   String            @db.VarChar(255)
+  phone                   String            @db.VarChar(30)
+  address                 String            @db.VarChar(500)
+  age                     Int
+  certificationDocumentUrl String           @db.Text
+  paymentIntentId         String            @unique @db.VarChar(255)
+  reviewNote              String?           @db.Text
+  reviewedAt              DateTime?
+  reviewedById            String?           @db.VarChar
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+
+  user       User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviewedBy User? @relation("ConsultantApplicationReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+  @@index([reviewedById])
+  @@map("consultant_applications")
+}

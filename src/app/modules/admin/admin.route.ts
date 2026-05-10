@@ -16,6 +16,7 @@ router.get("/stats/users", AdminController.getUserStats);
 router.get("/stats/posts", AdminController.getPostStats);
 router.get("/stats/bookings", AdminController.getBookingStats);
 router.get("/stats/reports", AdminController.getReportStats);
+router.get("/stats/daily", AdminController.getDailyStats);
 
 // User management
 router.get("/users", AdminController.getAllUsers);
@@ -30,6 +31,12 @@ router.post(
     validateRequest(AdminValidation.moderationSchema),
     AdminController.moderateUser
 );
+// Super-admin only: promote/demote admin role
+router.patch(
+    "/users/:id/role",
+    checkAuth(UserRole.SUPER_ADMIN),
+    AdminController.changeUserRole
+);
 
 // Post management
 router.get("/posts", AdminController.getAllPosts);
@@ -39,6 +46,9 @@ router.patch(
     AdminController.updatePost
 );
 router.delete("/posts/:id", AdminController.deletePost);
+
+// Consultant management
+router.get("/consultants", AdminController.getAllConsultants);
 
 // Moderation logs
 router.get("/moderation-logs", AdminController.getModerationLogs);

@@ -9,7 +9,11 @@ const createUserSchema = z.object({
 
 const updateUserSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters").optional(),
+    phone: z.string().max(20, "Phone number too long").optional().nullable(),
+    age: z.coerce.number().int().min(13, "Must be at least 13 years old").max(120, "Invalid age").optional().nullable(),
+    bio: z.string().max(500, "Bio must be 500 characters or less").optional().nullable(),
     defaultPostVisibility: z.nativeEnum(PostVisibility).optional(),
+    isProfilePublic: z.boolean().optional(),
 });
 
 const updateUserRoleSchema = z.object({

@@ -40,8 +40,9 @@ export interface IPostWithAuthor extends IPost {
             avatarUrl?: string | null;
         } | null;
     };
+    upvotes: number;
+    downvotes: number;
     _count?: {
         comments: number;
-        reactions: number;
     };
 }

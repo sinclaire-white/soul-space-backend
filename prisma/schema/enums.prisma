@@ -24,17 +24,20 @@ enum CommentStatus {
 }
 
 enum ReactionType {
-  SUPPORT
-  HUG
-  RELATE
-  THANKS
-  STRENGTH
+  UPVOTE
+  DOWNVOTE
 }
 
 enum VerificationStatus {
   PENDING
   VERIFIED
   SUSPENDED
+  REJECTED
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
   REJECTED
 }
 

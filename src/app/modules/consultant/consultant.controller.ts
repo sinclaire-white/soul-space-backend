@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import status from "http-status";
-import { UserRole } from "../../../../prisma/generated/prisma/enums";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import { ConsultantService } from "./consultant.service";
@@ -39,7 +38,7 @@ const getAllConsultants = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getConsultantById = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const result = await ConsultantService.getConsultantById(id);
 
     sendResponse(res, {
@@ -75,7 +74,7 @@ const updateMyConsultantProfile = catchAsync(async (req: Request, res: Response)
 });
 
 const updateVerificationStatus = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { verificationStatus } = req.body;
     const result = await ConsultantService.updateVerificationStatus(id, verificationStatus);
 
@@ -117,7 +116,20 @@ const getSpecializations = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const createApplicationPayment = catchAsync(async (req: Request, res: Response) => {
+    const userId = (req as any).user?.userId;
+    const result = await ConsultantService.createApplicationPayment(userId);
+
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Application payment intent created successfully",
+        data: result,
+    });
+});
+
 export const ConsultantController = {
+    createApplicationPayment,
     createConsultant,
     getAllConsultants,
     getConsultantById,

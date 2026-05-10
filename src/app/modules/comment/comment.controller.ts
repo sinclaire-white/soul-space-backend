@@ -5,7 +5,7 @@ import { sendResponse } from "../../shared/sendResponse";
 import { CommentService } from "./comment.service";
 
 const createComment = catchAsync(async (req: Request, res: Response) => {
-    const { postId } = req.params;
+    const postId = req.params.postId as string;
     const userId = (req as any).user?.userId;
     const userRole = (req as any).user?.role;
     const result = await CommentService.createComment(postId, userId, userRole, req.body);
@@ -19,7 +19,7 @@ const createComment = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getCommentsByPostId = catchAsync(async (req: Request, res: Response) => {
-    const { postId } = req.params;
+    const postId = req.params.postId as string;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
     const result = await CommentService.getCommentsByPostId(postId, page, limit);

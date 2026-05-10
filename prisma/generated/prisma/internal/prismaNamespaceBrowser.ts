@@ -61,6 +61,7 @@ export const ModelName = {
   Consultant: 'Consultant',
   ConsultantAvailability: 'ConsultantAvailability',
   ConsultantTemplate: 'ConsultantTemplate',
+  ConsultantApplication: 'ConsultantApplication',
   Report: 'Report',
   UserSuspension: 'UserSuspension',
   Post: 'Post',
@@ -90,9 +91,13 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   name: 'name',
   image: 'image',
+  phone: 'phone',
+  age: 'age',
+  bio: 'bio',
   role: 'role',
   isActive: 'isActive',
   defaultPostVisibility: 'defaultPostVisibility',
+  isProfilePublic: 'isProfilePublic',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   lastLoginAt: 'lastLoginAt'
@@ -208,6 +213,7 @@ export const ConsultantScalarFieldEnum = {
   averageRating: 'averageRating',
   totalSessions: 'totalSessions',
   isAvailable: 'isAvailable',
+  applicationPaymentId: 'applicationPaymentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -240,6 +246,27 @@ export const ConsultantTemplateScalarFieldEnum = {
 } as const
 
 export type ConsultantTemplateScalarFieldEnum = (typeof ConsultantTemplateScalarFieldEnum)[keyof typeof ConsultantTemplateScalarFieldEnum]
+
+
+export const ConsultantApplicationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  age: 'age',
+  certificationDocumentUrl: 'certificationDocumentUrl',
+  paymentIntentId: 'paymentIntentId',
+  reviewNote: 'reviewNote',
+  reviewedAt: 'reviewedAt',
+  reviewedById: 'reviewedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ConsultantApplicationScalarFieldEnum = (typeof ConsultantApplicationScalarFieldEnum)[keyof typeof ConsultantApplicationScalarFieldEnum]
 
 
 export const ReportScalarFieldEnum = {

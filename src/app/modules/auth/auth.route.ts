@@ -34,6 +34,12 @@ router.post(
 );
 
 router.post(
+    "/resend-otp",
+    validateRequest(AuthValidation.resendOTPSchema),
+    AuthController.resendOTP
+);
+
+router.post(
     "/forgot-password",
     validateRequest(AuthValidation.forgotPasswordSchema),
     AuthController.forgetPassword
@@ -61,9 +67,5 @@ router.post(
     validateRequest(AuthValidation.logoutSchema),
     AuthController.logoutUser
 );
-
-// Google OAuth callback
-router.get("/google/success", AuthController.googleLoginSuccess);
-router.get("/google/callback", AuthController.googleLoginSuccess);
 
 export const AuthRoutes = router;

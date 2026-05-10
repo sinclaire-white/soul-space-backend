@@ -7,6 +7,29 @@ import { IBooking, IBookingCreate, IBookingFilters, IBookingUpdate, IBookingWith
 const MIN_ADVANCE_HOURS = 24;
 const MAX_ADVANCE_DAYS = 28;
 
+const toNumber = (value: number | { toNumber(): number }) =>
+    typeof value === "number" ? value : value.toNumber();
+
+const mapBooking = (booking: any): IBooking => {
+    const { pricePaid, ...rest } = booking;
+
+    return {
+        ...rest,
+        pricePaid: toNumber(pricePaid),
+    };
+};
+
+const mapBookingWithDetails = (booking: any): IBookingWithDetails => ({
+    ...mapBooking(booking),
+    client: booking.client,
+    consultant: booking.consultant
+        ? {
+            ...booking.consultant,
+            hourlyRate: toNumber(booking.consultant.hourlyRate),
+        }
+        : undefined,
+});
+
 const createBooking = async (
     clientId: string,
     payload: IBookingCreate
@@ -83,7 +106,7 @@ const createBooking = async (
         },
     });
 
-    return booking as IBooking;
+    return mapBooking(booking);
 };
 
 const getMyBookings = async (
@@ -136,7 +159,7 @@ const getMyBookings = async (
         prisma.booking.count({ where }),
     ]);
 
-    return { bookings: bookings as IBookingWithDetails[], total };
+    return { bookings: bookings.map(mapBookingWithDetails), total };
 };
 
 const getConsultantBookings = async (
@@ -186,7 +209,7 @@ const getConsultantBookings = async (
         prisma.booking.count({ where }),
     ]);
 
-    return { bookings: bookings as IBookingWithDetails[], total };
+    return { bookings: bookings.map(mapBookingWithDetails), total };
 };
 
 const getBookingById = async (id: string): Promise<IBookingWithDetails | null> => {
@@ -221,7 +244,7 @@ const getBookingById = async (id: string): Promise<IBookingWithDetails | null> =
         },
     });
 
-    return booking as IBookingWithDetails | null;
+    return booking ? mapBookingWithDetails(booking) : null;
 };
 
 const updateBooking = async (
@@ -250,7 +273,7 @@ const updateBooking = async (
         data: payload,
     });
 
-    return updatedBooking as IBooking;
+    return mapBooking(updatedBooking);
 };
 
 const cancelBooking = async (id: string, userId: string): Promise<IBooking | null> => {
@@ -284,7 +307,7 @@ const cancelBooking = async (id: string, userId: string): Promise<IBooking | nul
         },
     });
 
-    return updatedBooking as IBooking;
+    return mapBooking(updatedBooking);
 };
 
 const confirmBooking = async (id: string, consultantUserId: string): Promise<IBooking | null> => {
@@ -311,7 +334,7 @@ const confirmBooking = async (id: string, consultantUserId: string): Promise<IBo
         },
     });
 
-    return updatedBooking as IBooking;
+    return mapBooking(updatedBooking);
 };
 
 const completeBooking = async (
@@ -350,7 +373,7 @@ const completeBooking = async (
         },
     });
 
-    return updatedBooking as IBooking;
+    return mapBooking(updatedBooking);
 };
 
 export const BookingService = {

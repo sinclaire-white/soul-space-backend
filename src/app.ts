@@ -1,6 +1,7 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
+import { toNodeHandler } from "better-auth/node";
 import express, { Express, Request, Response } from "express";
 import { envVars } from "./app/config/env";
 import { auth } from "./app/lib/auth";
@@ -25,16 +26,12 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// API rate limiting
-app.use("/api", apiLimiter);
+// API rate limiting — only apply to /api/v1 so better-auth's own /api/auth
+// internal requests are not counted against the budget.
+app.use("/api/v1", apiLimiter);
 
 // Better Auth handler - MUST be before express.json()
-app.all("/api/auth/*", async (req, res) => {
-    // Better Auth handler will be mounted here
-    // Using dynamic import to handle the auth handler properly
-    const { toNodeHandler } = await import("better-auth/node");
-    return toNodeHandler(auth)(req, res);
-});
+app.use("/api/auth", toNodeHandler(auth));
 
 // Body parser middleware
 app.use(express.json({ limit: '10mb' }));

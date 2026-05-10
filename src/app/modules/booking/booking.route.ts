@@ -17,6 +17,12 @@ router.post(
     BookingController.createBooking
 );
 
+router.get(
+    "/consultant/bookings",
+    checkAuth(UserRole.CONSULTANT),
+    BookingController.getConsultantBookings
+);
+
 router.get("/me", checkAuth(), BookingController.getMyBookings);
 router.get("/:id", checkAuth(), BookingController.getBookingById);
 router.patch(
@@ -26,13 +32,6 @@ router.patch(
     BookingController.updateBooking
 );
 router.patch("/:id/cancel", checkAuth(), BookingController.cancelBooking);
-
-// Consultant routes
-router.get(
-    "/consultant/bookings",
-    checkAuth(UserRole.CONSULTANT),
-    BookingController.getConsultantBookings
-);
 
 router.patch("/:id/confirm", checkAuth(UserRole.CONSULTANT), BookingController.confirmBooking);
 

@@ -68,6 +68,11 @@ export type ConsultantAvailability = Prisma.ConsultantAvailabilityModel
  */
 export type ConsultantTemplate = Prisma.ConsultantTemplateModel
 /**
+ * Model ConsultantApplication
+ * 
+ */
+export type ConsultantApplication = Prisma.ConsultantApplicationModel
+/**
  * Model Report
  * 
  */

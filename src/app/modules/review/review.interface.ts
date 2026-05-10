@@ -30,13 +30,13 @@ export interface IReviewFilters {
 }
 
 export interface IReviewWithDetails extends IReview {
-    client: {
+    client?: {
         id: string;
         nickname?: {
             handle: string;
         } | null;
     };
-    consultant: {
+    consultant?: {
         id: string;
         professionalTitle: string;
         user: {

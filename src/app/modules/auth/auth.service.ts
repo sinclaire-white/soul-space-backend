@@ -1,4 +1,5 @@
 import status from "http-status";
+import { UserRole } from "../../../../prisma/generated/prisma/enums";
 import { envVars } from "../../config/env";
 import AppError from "../../errorHelpers/AppError";
 import { auth } from "../../lib/auth";
@@ -6,6 +7,14 @@ import { prisma } from "../../lib/prisma";
 import { jwtUtils } from "../../utils/jwt";
 import { tokenUtils } from "../../utils/token";
 import { IAuthResponse, IChangePasswordPayload, ILoginUserPayload, IRegisterUserPayload } from "./auth.interface";
+
+const requireSessionToken = (sessionToken: string | null | undefined): string => {
+    if (!sessionToken) {
+        throw new AppError(status.INTERNAL_SERVER_ERROR, "Failed to create authentication session");
+    }
+
+    return sessionToken;
+};
 
 const registerUser = async (payload: IRegisterUserPayload): Promise<IAuthResponse> => {
     const { name, email, password } = payload;
@@ -15,22 +24,13 @@ const registerUser = async (payload: IRegisterUserPayload): Promise<IAuthRespons
             name,
             email,
             password,
+            role: UserRole.USER,
         },
     });
 
     if (!data.user) {
         throw new AppError(status.BAD_REQUEST, "Failed to register user");
     }
-
-    // Create nickname for user
-    const handle = `user_${Math.random().toString(36).substring(2, 8)}`;
-    await prisma.nickname.create({
-        data: {
-            userId: data.user.id,
-            handle,
-            isActive: true,
-        },
-    });
 
     const accessToken = tokenUtils.getAccessToken({
         userId: data.user.id,
@@ -77,6 +77,15 @@ const loginUser = async (payload: ILoginUserPayload): Promise<IAuthResponse> => 
         where: { id: data.user.id },
         data: { lastLoginAt: new Date() },
     });
+
+    // Create nickname if not yet created (user row exists in DB at this point)
+    const existingNickname = await prisma.nickname.findUnique({ where: { userId: data.user.id } });
+    if (!existingNickname) {
+        const handle = `user_${Math.random().toString(36).substring(2, 8)}`;
+        await prisma.nickname.create({
+            data: { userId: data.user.id, handle, isActive: true },
+        });
+    }
 
     const accessToken = tokenUtils.getAccessToken({
         userId: data.user.id,
@@ -227,7 +236,7 @@ const changePassword = async (
         },
         token: accessToken,
         refreshToken,
-        sessionToken: session?.token || "",
+        sessionToken: requireSessionToken(session?.token),
     };
 };
 
@@ -242,14 +251,39 @@ const logoutUser = async (sessionToken: string) => {
 };
 
 const verifyEmail = async (email: string, otp: string) => {
-    await auth.api.verifyEmailOTP({
-        body: {
-            email,
-            otp,
-        },
-    });
+    try {
+        await auth.api.verifyEmailOTP({
+            body: { email, otp },
+        });
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Invalid or expired OTP";
+        throw new AppError(status.BAD_REQUEST, message);
+    }
 
     return { message: "Email verified successfully" };
+};
+
+const resendVerificationOTP = async (email: string) => {
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+        throw new AppError(status.NOT_FOUND, "User not found");
+    }
+
+    if (user.emailVerified) {
+        throw new AppError(status.BAD_REQUEST, "Email is already verified");
+    }
+
+    try {
+        await auth.api.sendVerificationOTP({
+            body: { email, type: "email-verification" as const },
+        });
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Failed to resend OTP";
+        throw new AppError(status.INTERNAL_SERVER_ERROR, message);
+    }
+
+    return { message: "Verification OTP resent to email" };
 };
 
 const forgetPassword = async (email: string) => {
@@ -297,60 +331,6 @@ const resetPassword = async (email: string, otp: string, newPassword: string) =>
     return { message: "Password reset successfully" };
 };
 
-const googleLoginSuccess = async (sessionToken: string): Promise<IAuthResponse> => {
-    const session = await prisma.session.findUnique({
-        where: { token: sessionToken },
-        include: { user: true },
-    });
-
-    if (!session?.user) {
-        throw new AppError(status.UNAUTHORIZED, "Invalid session");
-    }
-
-    const user = session.user;
-
-    // Create nickname if not exists
-    const existingNickname = await prisma.nickname.findUnique({
-        where: { userId: user.id },
-    });
-
-    if (!existingNickname) {
-        const handle = `user_${Math.random().toString(36).substring(2, 8)}`;
-        await prisma.nickname.create({
-            data: {
-                userId: user.id,
-                handle,
-                isActive: true,
-            },
-        });
-    }
-
-    const accessToken = tokenUtils.getAccessToken({
-        userId: user.id,
-        role: user.role,
-        email: user.email,
-    });
-
-    const refreshToken = tokenUtils.getRefreshToken({
-        userId: user.id,
-        role: user.role,
-        email: user.email,
-    });
-
-    return {
-        user: {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            emailVerified: user.emailVerified,
-        },
-        token: accessToken,
-        refreshToken,
-        sessionToken: session.token,
-    };
-};
-
 export const AuthService = {
     registerUser,
     loginUser,
@@ -359,7 +339,7 @@ export const AuthService = {
     changePassword,
     logoutUser,
     verifyEmail,
+    resendVerificationOTP,
     forgetPassword,
     resetPassword,
-    googleLoginSuccess,
 };

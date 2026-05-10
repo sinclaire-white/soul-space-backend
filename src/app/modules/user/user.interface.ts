@@ -6,9 +6,13 @@ export interface IUser {
     emailVerified: boolean;
     name?: string | null;
     image?: string | null;
+    phone?: string | null;
+    age?: number | null;
+    bio?: string | null;
     role: UserRole;
     isActive: boolean;
     defaultPostVisibility: PostVisibility;
+    isProfilePublic: boolean;
     createdAt: Date;
     updatedAt: Date;
     lastLoginAt?: Date | null;
@@ -22,7 +26,12 @@ export interface IUserCreate {
 
 export interface IUserUpdate {
     name?: string;
+    image?: string;
+    phone?: string;
+    age?: number;
+    bio?: string;
     defaultPostVisibility?: PostVisibility;
+    isProfilePublic?: boolean;
 }
 
 export interface IUserFilters {

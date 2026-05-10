@@ -54,6 +54,12 @@ const verifyEmailSchema = z.object({
     }),
 });
 
+const resendOTPSchema = z.object({
+    body: z.object({
+        email: z.string().email("Invalid email address"),
+    }),
+});
+
 const forgotPasswordSchema = z.object({
     body: z.object({
         email: z.string().email("Invalid email address"),
@@ -81,6 +87,7 @@ export const AuthValidation = {
     changePasswordSchema,
     logoutSchema,
     verifyEmailSchema,
+    resendOTPSchema,
     forgotPasswordSchema,
     resetPasswordSchema,
 };

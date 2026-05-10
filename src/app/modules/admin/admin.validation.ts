@@ -18,8 +18,7 @@ const moderationSchema = z.object({
 
 const updatePostSchema = z.object({
     body: z.object({
-        isHidden: z.boolean().optional(),
-        status: z.enum(["PENDING", "APPROVED", "REJECTED"]).optional(),
+        status: z.enum(["ACTIVE", "HIDDEN_BY_USER", "UNDER_REVIEW", "REMOVED"]).optional(),
     }),
 });
 

@@ -55,7 +55,7 @@ const getMyAvailabilities = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAvailableSlots = catchAsync(async (req: Request, res: Response) => {
-    const { consultantId } = req.params;
+    const consultantId = req.params.consultantId as string;
     const fromDate = req.query.fromDate
         ? new Date(req.query.fromDate as string)
         : new Date();
@@ -72,7 +72,7 @@ const getAvailableSlots = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateAvailability = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const consultantUserId = (req as any).user?.userId;
     const { prisma } = await import("../../lib/prisma");
     const consultant = await prisma.consultant.findUnique({
@@ -98,7 +98,7 @@ const updateAvailability = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteAvailability = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const consultantUserId = (req as any).user?.userId;
     const { prisma } = await import("../../lib/prisma");
     const consultant = await prisma.consultant.findUnique({

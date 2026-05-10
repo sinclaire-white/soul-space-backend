@@ -55,6 +55,17 @@ const getReportStats = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const getDailyStats = catchAsync(async (req: Request, res: Response) => {
+    const days = req.query.days ? Number(req.query.days) : 30;
+    const result = await AdminService.getDailyStats(days);
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Daily stats retrieved successfully",
+        data: result,
+    });
+});
+
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
     const result = await AdminService.getAllUsers(req.query);
     sendResponse(res, {
@@ -96,6 +107,30 @@ const moderateUser = catchAsync(async (req: Request, res: Response) => {
         success: true,
         message: "User moderated successfully",
         data: result,
+    });
+});
+
+const changeUserRole = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    const { role } = req.body as { role: "USER" | "ADMIN" };
+    const requesterId = (req as any).user.userId as string;
+    const result = await AdminService.changeUserRole(id, role, requesterId);
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: role === "ADMIN" ? "User promoted to admin." : "Admin role removed.",
+        data: result,
+    });
+});
+
+const getAllConsultants = catchAsync(async (req: Request, res: Response) => {
+    const result = await AdminService.getAllConsultants(req.query);
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Consultants retrieved successfully",
+        meta: result.meta,
+        data: result.data,
     });
 });
 
@@ -149,10 +184,13 @@ export const AdminController = {
     getPostStats,
     getBookingStats,
     getReportStats,
+    getDailyStats,
     getAllUsers,
     getUserById,
     updateUser,
     moderateUser,
+    changeUserRole,
+    getAllConsultants,
     getAllPosts,
     updatePost,
     deletePost,

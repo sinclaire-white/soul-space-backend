@@ -2,7 +2,7 @@ import { ReactionType } from "../../../../prisma/generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import AppError from "../../errorHelpers/AppError";
 import status from "http-status";
-import { IReaction, IReactionCreate, IReactionCounts, IPostReactions } from "./reaction.interface";
+import { IReaction, IReactionCreate, IPostReactions } from "./reaction.interface";
 
 const createOrUpdateReaction = async (
     postId: string,
@@ -99,18 +99,8 @@ const getPostReactions = async (
         where: { postId },
     });
 
-    const counts: IReactionCounts = {
-        SUPPORT: 0,
-        HUG: 0,
-        RELATE: 0,
-        THANKS: 0,
-        STRENGTH: 0,
-    };
-
-    reactions.forEach((reaction) => {
-        counts[reaction.reactionType]++;
-    });
-
+    const upvotes = reactions.filter((r) => r.reactionType === ReactionType.UPVOTE).length;
+    const downvotes = reactions.filter((r) => r.reactionType === ReactionType.DOWNVOTE).length;
     const totalReactions = reactions.length;
 
     let userReaction: ReactionType | null = null;
@@ -129,7 +119,8 @@ const getPostReactions = async (
     return {
         postId,
         totalReactions,
-        counts,
+        upvotes,
+        downvotes,
         userReaction,
     };
 };

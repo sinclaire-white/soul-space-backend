@@ -45,6 +45,5 @@ export interface IAdminUpdateUserPayload {
 }
 
 export interface IAdminUpdatePostPayload {
-    isHidden?: boolean;
-    status?: "PENDING" | "APPROVED" | "REJECTED";
+    status?: "ACTIVE" | "HIDDEN_BY_USER" | "UNDER_REVIEW" | "REMOVED";
 }

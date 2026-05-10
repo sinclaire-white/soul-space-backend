@@ -4,16 +4,22 @@ import status from "http-status";
 import { catchAsync } from "../../shared/catchAsync";
 import { sendResponse } from "../../shared/sendResponse";
 import AppError from "../../errorHelpers/AppError";
-import { CookieUtils } from "../../utils/cookie";
 import { AuthService } from "./auth.service";
-import { envVars } from "../../config/env";
 import { tokenUtils } from "../../utils/token";
+import { envVars } from "../../config/env";
+
+const setAuthCookies = (res: Response, token: string, refreshToken: string, sessionToken: string | null) => {
+    tokenUtils.setAccessTokenCookie(res, token);
+    tokenUtils.setRefreshTokenCookie(res, refreshToken);
+
+    if (sessionToken) {
+        tokenUtils.setBetterAuthSessionCookie(res, sessionToken);
+    }
+};
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
     const result = await AuthService.registerUser(req.body);
-    tokenUtils.setAccessTokenCookie(res, result.token);
-    tokenUtils.setRefreshTokenCookie(res, result.refreshToken);
-    tokenUtils.setBetterAuthSessionCookie(res, result.sessionToken);
+    setAuthCookies(res, result.token, result.refreshToken, result.sessionToken);
 
     sendResponse(res, {
         httpStatusCode: status.CREATED,
@@ -25,9 +31,7 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
     const result = await AuthService.loginUser(req.body);
-    tokenUtils.setAccessTokenCookie(res, result.token);
-    tokenUtils.setRefreshTokenCookie(res, result.refreshToken);
-    tokenUtils.setBetterAuthSessionCookie(res, result.sessionToken);
+    setAuthCookies(res, result.token, result.refreshToken, result.sessionToken);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -54,9 +58,7 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
 const getNewToken = catchAsync(async (req: Request, res: Response) => {
     const { refreshToken, sessionToken } = req.body;
     const result = await AuthService.getNewToken(refreshToken, sessionToken);
-    tokenUtils.setAccessTokenCookie(res, result.token);
-    tokenUtils.setRefreshTokenCookie(res, result.refreshToken);
-    tokenUtils.setBetterAuthSessionCookie(res, result.sessionToken);
+    setAuthCookies(res, result.token, result.refreshToken, result.sessionToken);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -72,9 +74,7 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
         throw new AppError(status.UNAUTHORIZED, "Unauthorized access. Please log in.");
     }
     const result = await AuthService.changePassword(userId, req.body);
-    tokenUtils.setAccessTokenCookie(res, result.token);
-    tokenUtils.setRefreshTokenCookie(res, result.refreshToken);
-    tokenUtils.setBetterAuthSessionCookie(res, result.sessionToken);
+    setAuthCookies(res, result.token, result.refreshToken, result.sessionToken);
 
     sendResponse(res, {
         httpStatusCode: status.OK,
@@ -122,6 +122,17 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const resendOTP = catchAsync(async (req: Request, res: Response) => {
+    const { email } = req.body;
+    const result = await AuthService.resendVerificationOTP(email);
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: result.message,
+        data: null,
+    });
+});
+
 const forgetPassword = catchAsync(async (req: Request, res: Response) => {
     const { email } = req.body;
     const result = await AuthService.forgetPassword(email);
@@ -144,26 +155,6 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
-const googleLoginSuccess = catchAsync(async (req: Request, res: Response) => {
-    const sessionToken = CookieUtils.getCookie(req, "better-auth.session_token");
-
-    if (!sessionToken) {
-        throw new AppError(status.UNAUTHORIZED, "Unauthorized access. Please log in.");
-    }
-
-    const result = await AuthService.googleLoginSuccess(sessionToken);
-    tokenUtils.setAccessTokenCookie(res, result.token);
-    tokenUtils.setRefreshTokenCookie(res, result.refreshToken);
-    tokenUtils.setBetterAuthSessionCookie(res, result.sessionToken);
-
-    sendResponse(res, {
-        httpStatusCode: status.OK,
-        success: true,
-        message: "Google login successful",
-        data: result,
-    });
-});
-
 export const AuthController = {
     registerUser,
     loginUser,
@@ -172,7 +163,7 @@ export const AuthController = {
     changePassword,
     logoutUser,
     verifyEmail,
+    resendOTP,
     forgetPassword,
     resetPassword,
-    googleLoginSuccess,
 };

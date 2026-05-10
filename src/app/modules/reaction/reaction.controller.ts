@@ -5,7 +5,7 @@ import { sendResponse } from "../../shared/sendResponse";
 import { ReactionService } from "./reaction.service";
 
 const createOrUpdateReaction = catchAsync(async (req: Request, res: Response) => {
-    const { postId } = req.params;
+    const postId = req.params.postId as string;
     const userId = (req as any).user?.userId;
     const result = await ReactionService.createOrUpdateReaction(postId, userId, req.body);
 
@@ -18,7 +18,7 @@ const createOrUpdateReaction = catchAsync(async (req: Request, res: Response) =>
 });
 
 const removeReaction = catchAsync(async (req: Request, res: Response) => {
-    const { postId } = req.params;
+    const postId = req.params.postId as string;
     const userId = (req as any).user?.userId;
     await ReactionService.removeReaction(postId, userId);
 
@@ -31,7 +31,7 @@ const removeReaction = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getPostReactions = catchAsync(async (req: Request, res: Response) => {
-    const { postId } = req.params;
+    const postId = req.params.postId as string;
     const userId = (req as any).user?.userId;
     const result = await ReactionService.getPostReactions(postId, userId);
 

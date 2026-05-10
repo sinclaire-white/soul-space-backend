@@ -62,10 +62,12 @@ const getAllPosts = async (
                         },
                     },
                 },
+                reactions: {
+                    select: { reactionType: true },
+                },
                 _count: {
                     select: {
                         comments: true,
-                        reactions: true,
                     },
                 },
             },
@@ -73,7 +75,14 @@ const getAllPosts = async (
         prisma.post.count({ where }),
     ]);
 
-    return { posts: posts as IPostWithAuthor[], total };
+    const postsWithVotes = posts.map((post: any) => ({
+        ...post,
+        upvotes: post.reactions.filter((r: any) => r.reactionType === "UPVOTE").length,
+        downvotes: post.reactions.filter((r: any) => r.reactionType === "DOWNVOTE").length,
+        reactions: undefined,
+    }));
+
+    return { posts: postsWithVotes as IPostWithAuthor[], total };
 };
 
 const getPostById = async (id: string): Promise<IPostWithAuthor | null> => {
@@ -91,10 +100,12 @@ const getPostById = async (id: string): Promise<IPostWithAuthor | null> => {
                     },
                 },
             },
+            reactions: {
+                select: { reactionType: true },
+            },
             _count: {
                 select: {
                     comments: true,
-                    reactions: true,
                 },
             },
         },
@@ -104,13 +115,20 @@ const getPostById = async (id: string): Promise<IPostWithAuthor | null> => {
         return null;
     }
 
+    const postWithVotes = {
+        ...post,
+        upvotes: (post as any).reactions.filter((r: any) => r.reactionType === "UPVOTE").length,
+        downvotes: (post as any).reactions.filter((r: any) => r.reactionType === "DOWNVOTE").length,
+        reactions: undefined,
+    };
+
     // Increment view count
     await prisma.post.update({
         where: { id },
         data: { viewCount: { increment: 1 } },
     });
 
-    return post as IPostWithAuthor;
+    return postWithVotes as IPostWithAuthor;
 };
 
 const getMyPosts = async (

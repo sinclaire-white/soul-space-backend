@@ -9,7 +9,6 @@ const router = express.Router();
 
 // Public routes
 router.get("/", PostController.getAllPosts);
-router.get("/:id", PostController.getPostById);
 
 // Protected routes with rate limiting
 router.post(
@@ -21,6 +20,7 @@ router.post(
 );
 
 router.get("/my-posts", checkAuth(), PostController.getMyPosts);
+router.get("/:id", PostController.getPostById);
 
 router.patch(
     "/:id",

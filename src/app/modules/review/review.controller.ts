@@ -18,7 +18,7 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getReviewsByConsultant = catchAsync(async (req: Request, res: Response) => {
-    const { consultantId } = req.params;
+    const consultantId = req.params.consultantId as string;
     const filters: IReviewFilters = { ...req.query, consultantId };
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
@@ -97,7 +97,7 @@ const hideReview = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getReviewStats = catchAsync(async (req: Request, res: Response) => {
-    const { consultantId } = req.params;
+    const consultantId = req.params.consultantId as string;
     const result = await ReviewService.getReviewStats(consultantId);
 
     sendResponse(res, {

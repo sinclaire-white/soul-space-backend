@@ -9,6 +9,7 @@ import { prisma } from "./prisma";
 export const auth = betterAuth({
     baseURL: envVars.BETTER_AUTH_URL,
     secret: envVars.BETTER_AUTH_SECRET,
+    trustedOrigins: [envVars.FRONTEND_URL],
     database: prismaAdapter(prisma, {
         provider: "postgresql",
     }),
@@ -18,20 +19,7 @@ export const auth = betterAuth({
         requireEmailVerification: true,
     },
 
-    socialProviders: {
-        google: {
-            clientId: envVars.GOOGLE_CLIENT_ID,
-            clientSecret: envVars.GOOGLE_CLIENT_SECRET,
-            mapProfileToUser: () => {
-                return {
-                    role: UserRole.USER,
-                    emailVerified: true,
-                    isActive: true,
-                    defaultPostVisibility: "PUBLIC",
-                }
-            }
-        }
-    },
+    socialProviders: {},
 
     emailVerification: {
         sendOnSignUp: true,
@@ -69,32 +57,20 @@ export const auth = betterAuth({
         emailOTP({
             overrideDefaultEmailVerification: true,
             async sendVerificationOTP({ email, otp, type }) {
+                if (envVars.NODE_ENV !== "production") {
+                    console.log(`DEV OTP (${type}) for ${email}: ${otp}`);
+                }
+
                 if (type === "email-verification") {
-                    const user = await prisma.user.findUnique({
-                        where: { email }
-                    })
-
-                    if (!user) {
-                        console.error(`User with email ${email} not found. Cannot send verification OTP.`);
-                        return;
-                    }
-
-                    if (user.role === UserRole.SUPER_ADMIN) {
-                        console.log(`User with email ${email} is a super admin. Skipping sending verification OTP.`);
-                        return;
-                    }
-
-                    if (!user.emailVerified) {
-                        await sendEmail({
-                            to: email,
-                            subject: "Verify your email",
-                            templateName: "otp",
-                            templateData: {
-                                name: "Soul Space User",
-                                otp,
-                            }
-                        })
-                    }
+                    await sendEmail({
+                        to: email,
+                        subject: "Verify your email",
+                        templateName: "otp",
+                        templateData: {
+                            name: "Soul Space User",
+                            otp,
+                        }
+                    });
                 } else if (type === "forget-password") {
                     const user = await prisma.user.findUnique({
                         where: { email }
@@ -113,7 +89,7 @@ export const auth = betterAuth({
                     }
                 }
             },
-            expiresIn: 2 * 60, // 2 minutes in seconds
+            expiresIn: 5 * 60, // 5 minutes in seconds
             otpLength: 6,
         })
     ],
@@ -126,12 +102,6 @@ export const auth = betterAuth({
             maxAge: 60 * 60 * 24, // 1 day in seconds
         }
     },
-
-    redirectURLs: {
-        signIn: `${envVars.BETTER_AUTH_URL}/api/v1/auth/google/success`,
-    },
-
-    trustedOrigins: [envVars.BETTER_AUTH_URL, envVars.FRONTEND_URL],
 
     advanced: {
         useSecureCookies: envVars.NODE_ENV === "production",

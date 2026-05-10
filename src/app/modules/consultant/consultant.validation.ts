@@ -8,6 +8,7 @@ const createConsultantSchema = z.object({
     hourlyRate: z.number().positive("Hourly rate must be positive"),
     yearsExperience: z.number().int().nonnegative("Years of experience must be non-negative"),
     specializations: z.array(z.string()).min(1, "At least one specialization is required"),
+    paymentIntentId: z.string().min(1, "Payment intent ID is required"),
 });
 
 const updateConsultantSchema = z.object({

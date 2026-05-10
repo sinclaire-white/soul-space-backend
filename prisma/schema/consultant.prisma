@@ -1,18 +1,19 @@
 model Consultant {
-  id                 String             @id @default(cuid())
-  userId             String             @unique @db.VarChar
-  verificationStatus VerificationStatus @default(PENDING)
-  professionalTitle  String             @db.VarChar(255)
-  licenseNumber      String?            @db.VarChar(255)
-  bio                String?            @db.Text
-  hourlyRate         Decimal            @db.Decimal(10, 2)
-  yearsExperience    Int
-  specializations    Json
-  averageRating      Decimal?           @db.Decimal(3, 2)
-  totalSessions      Int                @default(0)
-  isAvailable        Boolean            @default(true)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
+  id                   String             @id @default(cuid())
+  userId               String             @unique @db.VarChar
+  verificationStatus   VerificationStatus @default(PENDING)
+  professionalTitle    String             @db.VarChar(255)
+  licenseNumber        String?            @db.VarChar(255)
+  bio                  String?            @db.Text
+  hourlyRate           Decimal            @db.Decimal(10, 2)
+  yearsExperience      Int
+  specializations      Json
+  averageRating        Decimal?           @db.Decimal(3, 2)
+  totalSessions        Int                @default(0)
+  isAvailable          Boolean            @default(true)
+  applicationPaymentId String?            @db.VarChar(255)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
 
   user           User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
   availabilities ConsultantAvailability[]

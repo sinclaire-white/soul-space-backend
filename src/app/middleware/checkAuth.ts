@@ -63,6 +63,15 @@ export const checkAuth = (...authRoles: UserRole[]) => async (req: Request, res:
             email: user.email,
         };
 
+        // Look up the user's nicknameId for use in post creation etc.
+        const userNickname = await prisma.nickname.findUnique({
+            where: { userId: user.id },
+            select: { id: true },
+        });
+        if (userNickname) {
+            (req as any).user.nicknameId = userNickname.id;
+        }
+
         // Access Token Verification
         const accessToken = CookieUtils.getCookie(req, 'accessToken');
 

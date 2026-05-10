@@ -12,10 +12,9 @@ router.get("/", ConsultantController.getAllConsultants);
 router.get("/specializations", ConsultantController.getSpecializations);
 router.get("/:id", ConsultantController.getConsultantById);
 
-// Protected routes - Consultant only
 router.post(
     "/",
-    checkAuth(UserRole.USER, UserRole.CONSULTANT, UserRole.ADMIN, UserRole.SUPER_ADMIN),
+    checkAuth(UserRole.CONSULTANT, UserRole.ADMIN, UserRole.SUPER_ADMIN),
     validateRequest(ConsultantValidation.createConsultantSchema),
     ConsultantController.createConsultant
 );

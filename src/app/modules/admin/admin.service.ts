@@ -1,5 +1,5 @@
 import status from "http-status";
-import { ReportStatus, UserRole } from "../../../../prisma/generated/prisma/enums";
+import { ReportStatus, SuspensionType, UserRole } from "../../../../prisma/generated/prisma/enums";
 import AppError from "../../errorHelpers/AppError";
 import { prisma } from "../../lib/prisma";
 import {
@@ -90,14 +90,14 @@ const getBookingStats = async (): Promise<IBookingStats[]> => {
             status: true,
         },
         _sum: {
-            amount: true,
+            pricePaid: true,
         },
     });
 
     return stats.map((stat) => ({
         status: stat.status,
-        count: stat._count.status,
-        revenue: stat._sum.amount || 0,
+        count: typeof stat._count === "object" && "status" in stat._count ? stat._count.status ?? 0 : 0,
+        revenue: Number(stat._sum?.pricePaid ?? 0),
     }));
 };
 
@@ -185,16 +185,11 @@ const getUserById = async (userId: string) => {
                 take: 5,
                 orderBy: { createdAt: "desc" },
             },
-            reportsReceived: {
-                take: 5,
-                orderBy: { createdAt: "desc" },
-            },
             _count: {
                 select: {
                     posts: true,
                     comments: true,
                     reportsMade: true,
-                    reportsReceived: true,
                 },
             },
         },
@@ -229,6 +224,30 @@ const updateUser = async (userId: string, payload: IAdminUpdateUserPayload) => {
     return updatedUser;
 };
 
+const changeUserRole = async (userId: string, role: "USER" | "ADMIN", requesterId: string) => {
+    const [target, requester] = await Promise.all([
+        prisma.user.findUnique({ where: { id: userId } }),
+        prisma.user.findUnique({ where: { id: requesterId } }),
+    ]);
+
+    if (!target) throw new AppError(status.NOT_FOUND, "User not found");
+
+    if (target.role === UserRole.SUPER_ADMIN) {
+        throw new AppError(status.FORBIDDEN, "Cannot change the role of a super admin");
+    }
+
+    if (requester?.role !== UserRole.SUPER_ADMIN) {
+        throw new AppError(status.FORBIDDEN, "Only super admins can change user roles");
+    }
+
+    const updated = await prisma.user.update({
+        where: { id: userId },
+        data: { role },
+    });
+
+    return updated;
+};
+
 const moderateUser = async (userId: string, action: IModerationAction) => {
     const user = await prisma.user.findUnique({
         where: { id: userId },
@@ -244,50 +263,91 @@ const moderateUser = async (userId: string, action: IModerationAction) => {
     }
 
     let updateData: any = {};
-    let moderationLog: any = {
-        userId,
-        action: action.action,
-        reason: action.reason,
-    };
 
     switch (action.action) {
         case "WARN":
-            // Just log the warning
-            break;
+            return user;
         case "SUSPEND":
             updateData = {
                 isActive: false,
-                suspendedUntil: action.duration
-                    ? new Date(Date.now() + action.duration * 24 * 60 * 60 * 1000)
-                    : null,
             };
             break;
         case "BAN":
             updateData = {
                 isActive: false,
-                bannedAt: new Date(),
             };
             break;
         case "REINSTATE":
             updateData = {
                 isActive: true,
-                suspendedUntil: null,
-                bannedAt: null,
             };
             break;
     }
 
-    const [updatedUser] = await prisma.$transaction([
-        prisma.user.update({
+    const updatedUser = await prisma.$transaction(async (tx) => {
+        const nextUser = await tx.user.update({
             where: { id: userId },
             data: updateData,
-        }),
-        prisma.moderationLog.create({
-            data: moderationLog,
-        }),
-    ]);
+        });
+
+        if (action.action === "SUSPEND" || action.action === "BAN") {
+            await tx.userSuspension.upsert({
+                where: { userId },
+                create: {
+                    userId,
+                    reason: action.reason,
+                    suspensionType: action.action === "BAN" ? SuspensionType.PERMANENT : SuspensionType.TEMPORARY,
+                    expiresAt: action.action === "SUSPEND" && action.duration
+                        ? new Date(Date.now() + action.duration * 24 * 60 * 60 * 1000)
+                        : null,
+                },
+                update: {
+                    reason: action.reason,
+                    suspensionType: action.action === "BAN" ? SuspensionType.PERMANENT : SuspensionType.TEMPORARY,
+                    expiresAt: action.action === "SUSPEND" && action.duration
+                        ? new Date(Date.now() + action.duration * 24 * 60 * 60 * 1000)
+                        : null,
+                },
+            });
+        }
+
+        if (action.action === "REINSTATE") {
+            await tx.userSuspension.deleteMany({ where: { userId } });
+        }
+
+        return nextUser;
+    });
 
     return updatedUser;
+};
+
+const getAllConsultants = async (query: any) => {
+    const { page = 1, limit = 10 } = query;
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const [consultants, total] = await Promise.all([
+        prisma.consultant.findMany({
+            skip,
+            take: Number(limit),
+            orderBy: { createdAt: "desc" },
+            include: {
+                user: {
+                    select: { id: true, name: true, email: true },
+                },
+            },
+        }),
+        prisma.consultant.count(),
+    ]);
+
+    return {
+        data: consultants,
+        meta: {
+            page: Number(page),
+            limit: Number(limit),
+            total,
+            totalPages: Math.ceil(total / Number(limit)),
+        },
+    };
 };
 
 const getAllPosts = async (query: any) => {
@@ -298,17 +358,12 @@ const getAllPosts = async (query: any) => {
 
     if (search) {
         where.OR = [
-            { title: { contains: search, mode: "insensitive" } },
             { content: { contains: search, mode: "insensitive" } },
         ];
     }
 
     if (status) {
         where.status = status;
-    }
-
-    if (isHidden !== undefined) {
-        where.isHidden = isHidden === "true";
     }
 
     const [posts, total] = await Promise.all([
@@ -389,7 +444,7 @@ const getModerationLogs = async (query: any) => {
     }
 
     const [logs, total] = await Promise.all([
-        prisma.moderationLog.findMany({
+        prisma.userSuspension.findMany({
             where,
             skip,
             take: Number(limit),
@@ -404,7 +459,7 @@ const getModerationLogs = async (query: any) => {
                 },
             },
         }),
-        prisma.moderationLog.count({ where }),
+        prisma.userSuspension.count({ where }),
     ]);
 
     return {
@@ -418,16 +473,49 @@ const getModerationLogs = async (query: any) => {
     };
 };
 
+const getDailyStats = async (days = 30): Promise<{ date: string; newUsers: number; newPosts: number }[]> => {
+    const since = new Date();
+    since.setUTCDate(since.getUTCDate() - days + 1);
+    since.setUTCHours(0, 0, 0, 0);
+
+    const [users, posts] = await Promise.all([
+        prisma.user.findMany({
+            where: { createdAt: { gte: since } },
+            select: { createdAt: true },
+        }),
+        prisma.post.findMany({
+            where: { createdAt: { gte: since } },
+            select: { createdAt: true },
+        }),
+    ]);
+
+    const result: { date: string; newUsers: number; newPosts: number }[] = [];
+    for (let i = 0; i < days; i++) {
+        const d = new Date(since);
+        d.setUTCDate(since.getUTCDate() + i);
+        const key = d.toISOString().slice(0, 10);
+        result.push({
+            date: key,
+            newUsers: users.filter((u) => u.createdAt.toISOString().slice(0, 10) === key).length,
+            newPosts: posts.filter((p) => p.createdAt.toISOString().slice(0, 10) === key).length,
+        });
+    }
+    return result;
+};
+
 export const AdminService = {
     getDashboardStats,
     getUserStats,
     getPostStats,
     getBookingStats,
     getReportStats,
+    getDailyStats,
     getAllUsers,
     getUserById,
     updateUser,
+    changeUserRole,
     moderateUser,
+    getAllConsultants,
     getAllPosts,
     updatePost,
     deletePost,

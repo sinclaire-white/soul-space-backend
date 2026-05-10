@@ -3,10 +3,53 @@ import { prisma } from "../../lib/prisma";
 import AppError from "../../errorHelpers/AppError";
 import status from "http-status";
 import { IConsultant, IConsultantCreate, IConsultantFilters, IConsultantUpdate, IConsultantWithUser } from "./consultant.interface";
+import { createPaymentIntent, confirmPaymentIntent } from "../../config/stripe";
+
+const APPLICATION_FEE_AMOUNT = 10; // $10 application fee
+
+const toNumber = (value: number | { toNumber(): number }) =>
+    typeof value === "number" ? value : value.toNumber();
+
+const mapConsultant = (consultant: any): IConsultant => {
+    const { hourlyRate, averageRating, ...rest } = consultant;
+
+    return {
+        ...rest,
+        hourlyRate: toNumber(hourlyRate),
+        averageRating: averageRating == null ? averageRating : toNumber(averageRating),
+    };
+};
+
+const mapConsultantWithUser = (consultant: any): IConsultantWithUser => ({
+    ...mapConsultant(consultant),
+    user: consultant.user,
+});
+
+const createApplicationPayment = async (userId: string) => {
+    // Check if user already has a consultant profile
+    const existingConsultant = await prisma.consultant.findUnique({
+        where: { userId },
+    });
+
+    if (existingConsultant) {
+        throw new AppError(status.CONFLICT, "User already has a consultant profile");
+    }
+
+    const paymentIntent = await createPaymentIntent(APPLICATION_FEE_AMOUNT, "usd", {
+        type: "consultant_application",
+        userId,
+    });
+
+    return {
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id,
+        amount: APPLICATION_FEE_AMOUNT,
+    };
+};
 
 const createConsultant = async (
     userId: string,
-    payload: IConsultantCreate
+    payload: IConsultantCreate & { paymentIntentId: string }
 ): Promise<IConsultant> => {
     // Check if user already has a consultant profile
     const existingConsultant = await prisma.consultant.findUnique({
@@ -17,16 +60,32 @@ const createConsultant = async (
         throw new AppError(status.CONFLICT, "User already has a consultant profile");
     }
 
+    // Verify payment
+    const paymentIntent = await confirmPaymentIntent(payload.paymentIntentId);
+
+    if (paymentIntent.status !== "succeeded") {
+        throw new AppError(status.BAD_REQUEST, "Application fee payment has not been completed");
+    }
+
+    if (paymentIntent.amount !== APPLICATION_FEE_AMOUNT * 100) {
+        throw new AppError(status.BAD_REQUEST, "Invalid payment amount for application fee");
+    }
+
     const consultant = await prisma.consultant.create({
         data: {
-            ...payload,
-            userId,
+            professionalTitle: payload.professionalTitle,
+            licenseNumber: payload.licenseNumber,
+            bio: payload.bio,
+            hourlyRate: payload.hourlyRate,
+            yearsExperience: payload.yearsExperience,
             specializations: payload.specializations as any,
+            userId,
             verificationStatus: VerificationStatus.PENDING,
+            applicationPaymentId: payload.paymentIntentId,
         },
     });
 
-    return consultant as IConsultant;
+    return mapConsultant(consultant);
 };
 
 const getAllConsultants = async (
@@ -87,7 +146,7 @@ const getAllConsultants = async (
         prisma.consultant.count({ where }),
     ]);
 
-    return { consultants: consultants as IConsultantWithUser[], total };
+    return { consultants: consultants.map(mapConsultantWithUser), total };
 };
 
 const getConsultantById = async (id: string): Promise<IConsultantWithUser | null> => {
@@ -111,7 +170,7 @@ const getConsultantById = async (id: string): Promise<IConsultantWithUser | null
         },
     });
 
-    return consultant as IConsultantWithUser | null;
+    return consultant ? mapConsultantWithUser(consultant) : null;
 };
 
 const getConsultantByUserId = async (userId: string): Promise<IConsultant | null> => {
@@ -119,7 +178,7 @@ const getConsultantByUserId = async (userId: string): Promise<IConsultant | null
         where: { userId },
     });
 
-    return consultant as IConsultant | null;
+    return consultant ? mapConsultant(consultant) : null;
 };
 
 const updateConsultant = async (
@@ -134,7 +193,7 @@ const updateConsultant = async (
         },
     });
 
-    return consultant as IConsultant;
+    return mapConsultant(consultant);
 };
 
 const updateVerificationStatus = async (
@@ -146,7 +205,7 @@ const updateVerificationStatus = async (
         data: { verificationStatus },
     });
 
-    return consultant as IConsultant;
+    return mapConsultant(consultant);
 };
 
 const getPendingVerifications = async (
@@ -176,7 +235,7 @@ const getPendingVerifications = async (
         }),
     ]);
 
-    return { consultants: consultants as IConsultantWithUser[], total };
+    return { consultants: consultants.map(mapConsultantWithUser), total };
 };
 
 const getSpecializations = async (): Promise<string[]> => {
@@ -196,6 +255,7 @@ const getSpecializations = async (): Promise<string[]> => {
 };
 
 export const ConsultantService = {
+    createApplicationPayment,
     createConsultant,
     getAllConsultants,
     getConsultantById,

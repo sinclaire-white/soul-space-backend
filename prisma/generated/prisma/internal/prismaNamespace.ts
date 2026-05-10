@@ -394,6 +394,7 @@ export const ModelName = {
   Consultant: 'Consultant',
   ConsultantAvailability: 'ConsultantAvailability',
   ConsultantTemplate: 'ConsultantTemplate',
+  ConsultantApplication: 'ConsultantApplication',
   Report: 'Report',
   UserSuspension: 'UserSuspension',
   Post: 'Post',
@@ -414,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "booking" | "review" | "comment" | "consultant" | "consultantAvailability" | "consultantTemplate" | "report" | "userSuspension" | "post" | "reaction" | "nickname"
+    modelProps: "user" | "session" | "account" | "verification" | "booking" | "review" | "comment" | "consultant" | "consultantAvailability" | "consultantTemplate" | "consultantApplication" | "report" | "userSuspension" | "post" | "reaction" | "nickname"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1158,6 +1159,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ConsultantApplication: {
+      payload: Prisma.$ConsultantApplicationPayload<ExtArgs>
+      fields: Prisma.ConsultantApplicationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ConsultantApplicationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ConsultantApplicationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload>
+        }
+        findFirst: {
+          args: Prisma.ConsultantApplicationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ConsultantApplicationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload>
+        }
+        findMany: {
+          args: Prisma.ConsultantApplicationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload>[]
+        }
+        create: {
+          args: Prisma.ConsultantApplicationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload>
+        }
+        createMany: {
+          args: Prisma.ConsultantApplicationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ConsultantApplicationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload>[]
+        }
+        delete: {
+          args: Prisma.ConsultantApplicationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload>
+        }
+        update: {
+          args: Prisma.ConsultantApplicationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload>
+        }
+        deleteMany: {
+          args: Prisma.ConsultantApplicationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ConsultantApplicationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ConsultantApplicationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload>[]
+        }
+        upsert: {
+          args: Prisma.ConsultantApplicationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConsultantApplicationPayload>
+        }
+        aggregate: {
+          args: Prisma.ConsultantApplicationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateConsultantApplication>
+        }
+        groupBy: {
+          args: Prisma.ConsultantApplicationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConsultantApplicationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ConsultantApplicationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConsultantApplicationCountAggregateOutputType> | number
+        }
+      }
+    }
     Report: {
       payload: Prisma.$ReportPayload<ExtArgs>
       fields: Prisma.ReportFieldRefs
@@ -1573,9 +1648,13 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   name: 'name',
   image: 'image',
+  phone: 'phone',
+  age: 'age',
+  bio: 'bio',
   role: 'role',
   isActive: 'isActive',
   defaultPostVisibility: 'defaultPostVisibility',
+  isProfilePublic: 'isProfilePublic',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   lastLoginAt: 'lastLoginAt'
@@ -1691,6 +1770,7 @@ export const ConsultantScalarFieldEnum = {
   averageRating: 'averageRating',
   totalSessions: 'totalSessions',
   isAvailable: 'isAvailable',
+  applicationPaymentId: 'applicationPaymentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1723,6 +1803,27 @@ export const ConsultantTemplateScalarFieldEnum = {
 } as const
 
 export type ConsultantTemplateScalarFieldEnum = (typeof ConsultantTemplateScalarFieldEnum)[keyof typeof ConsultantTemplateScalarFieldEnum]
+
+
+export const ConsultantApplicationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  status: 'status',
+  fullName: 'fullName',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  age: 'age',
+  certificationDocumentUrl: 'certificationDocumentUrl',
+  paymentIntentId: 'paymentIntentId',
+  reviewNote: 'reviewNote',
+  reviewedAt: 'reviewedAt',
+  reviewedById: 'reviewedById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ConsultantApplicationScalarFieldEnum = (typeof ConsultantApplicationScalarFieldEnum)[keyof typeof ConsultantApplicationScalarFieldEnum]
 
 
 export const ReportScalarFieldEnum = {
@@ -1864,6 +1965,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'UserRole'
  */
 export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
@@ -1902,20 +2017,6 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -2000,6 +2101,20 @@ export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'J
  * Reference to a field of type 'QueryMode'
  */
 export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
+ * Reference to a field of type 'ApplicationStatus'
+ */
+export type EnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ApplicationStatus[]'
+ */
+export type ListEnumApplicationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ApplicationStatus[]'>
     
 
 
@@ -2191,6 +2306,7 @@ export type GlobalOmitConfig = {
   consultant?: Prisma.ConsultantOmit
   consultantAvailability?: Prisma.ConsultantAvailabilityOmit
   consultantTemplate?: Prisma.ConsultantTemplateOmit
+  consultantApplication?: Prisma.ConsultantApplicationOmit
   report?: Prisma.ReportOmit
   userSuspension?: Prisma.UserSuspensionOmit
   post?: Prisma.PostOmit

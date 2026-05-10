@@ -5,6 +5,11 @@ import { prisma } from "../lib/prisma";
 
 export const seedSuperAdmin = async () => {
     try {
+        if (!envVars.SUPER_ADMIN_EMAIL || !envVars.SUPER_ADMIN_PASSWORD) {
+            console.log("Super admin credentials are not configured. Skipping seeding super admin.");
+            return;
+        }
+
         const isSuperAdminExist = await prisma.user.findFirst({
             where: {
                 role: UserRole.SUPER_ADMIN
@@ -22,10 +27,14 @@ export const seedSuperAdmin = async () => {
                 password: envVars.SUPER_ADMIN_PASSWORD,
                 name: "Super Admin",
                 role: UserRole.SUPER_ADMIN,
-                emailVerified: true,
                 isActive: true,
             }
         })
+
+        await prisma.user.update({
+            where: { id: superAdminUser.user.id },
+            data: { emailVerified: true },
+        });
 
         console.log("Super Admin Created:", superAdminUser.user.id);
     } catch (error) {

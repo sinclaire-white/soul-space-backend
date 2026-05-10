@@ -14,16 +14,14 @@ export interface IReactionCreate {
 
 export interface IReactionCounts {
     [key: string]: number;
-    SUPPORT: number;
-    HUG: number;
-    RELATE: number;
-    THANKS: number;
-    STRENGTH: number;
+    UPVOTE: number;
+    DOWNVOTE: number;
 }
 
 export interface IPostReactions {
     postId: string;
     totalReactions: number;
-    counts: IReactionCounts;
+    upvotes: number;
+    downvotes: number;
     userReaction?: ReactionType | null;
 }

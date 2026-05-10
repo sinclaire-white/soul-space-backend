@@ -52,6 +52,7 @@ export type ConsultantMinAggregateOutputType = {
   averageRating: runtime.Decimal | null
   totalSessions: number | null
   isAvailable: boolean | null
+  applicationPaymentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +69,7 @@ export type ConsultantMaxAggregateOutputType = {
   averageRating: runtime.Decimal | null
   totalSessions: number | null
   isAvailable: boolean | null
+  applicationPaymentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -85,6 +87,7 @@ export type ConsultantCountAggregateOutputType = {
   averageRating: number
   totalSessions: number
   isAvailable: number
+  applicationPaymentId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -117,6 +120,7 @@ export type ConsultantMinAggregateInputType = {
   averageRating?: true
   totalSessions?: true
   isAvailable?: true
+  applicationPaymentId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -133,6 +137,7 @@ export type ConsultantMaxAggregateInputType = {
   averageRating?: true
   totalSessions?: true
   isAvailable?: true
+  applicationPaymentId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -150,6 +155,7 @@ export type ConsultantCountAggregateInputType = {
   averageRating?: true
   totalSessions?: true
   isAvailable?: true
+  applicationPaymentId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -254,6 +260,7 @@ export type ConsultantGroupByOutputType = {
   averageRating: runtime.Decimal | null
   totalSessions: number
   isAvailable: boolean
+  applicationPaymentId: string | null
   createdAt: Date
   updatedAt: Date
   _count: ConsultantCountAggregateOutputType | null
@@ -294,6 +301,7 @@ export type ConsultantWhereInput = {
   averageRating?: Prisma.DecimalNullableFilter<"Consultant"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFilter<"Consultant"> | number
   isAvailable?: Prisma.BoolFilter<"Consultant"> | boolean
+  applicationPaymentId?: Prisma.StringNullableFilter<"Consultant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Consultant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Consultant"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -316,6 +324,7 @@ export type ConsultantOrderByWithRelationInput = {
   averageRating?: Prisma.SortOrderInput | Prisma.SortOrder
   totalSessions?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
+  applicationPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -341,6 +350,7 @@ export type ConsultantWhereUniqueInput = Prisma.AtLeast<{
   averageRating?: Prisma.DecimalNullableFilter<"Consultant"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFilter<"Consultant"> | number
   isAvailable?: Prisma.BoolFilter<"Consultant"> | boolean
+  applicationPaymentId?: Prisma.StringNullableFilter<"Consultant"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Consultant"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Consultant"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -363,6 +373,7 @@ export type ConsultantOrderByWithAggregationInput = {
   averageRating?: Prisma.SortOrderInput | Prisma.SortOrder
   totalSessions?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
+  applicationPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ConsultantCountOrderByAggregateInput
@@ -388,6 +399,7 @@ export type ConsultantScalarWhereWithAggregatesInput = {
   averageRating?: Prisma.DecimalNullableWithAggregatesFilter<"Consultant"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntWithAggregatesFilter<"Consultant"> | number
   isAvailable?: Prisma.BoolWithAggregatesFilter<"Consultant"> | boolean
+  applicationPaymentId?: Prisma.StringNullableWithAggregatesFilter<"Consultant"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Consultant"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Consultant"> | Date | string
 }
@@ -404,6 +416,7 @@ export type ConsultantCreateInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutConsultantInput
@@ -426,6 +439,7 @@ export type ConsultantUncheckedCreateInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   availabilities?: Prisma.ConsultantAvailabilityUncheckedCreateNestedManyWithoutConsultantInput
@@ -446,6 +460,7 @@ export type ConsultantUpdateInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutConsultantNestedInput
@@ -468,6 +483,7 @@ export type ConsultantUncheckedUpdateInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   availabilities?: Prisma.ConsultantAvailabilityUncheckedUpdateManyWithoutConsultantNestedInput
@@ -489,6 +505,7 @@ export type ConsultantCreateManyInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -505,6 +522,7 @@ export type ConsultantUpdateManyMutationInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -522,6 +540,7 @@ export type ConsultantUncheckedUpdateManyInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -549,6 +568,7 @@ export type ConsultantCountOrderByAggregateInput = {
   averageRating?: Prisma.SortOrder
   totalSessions?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
+  applicationPaymentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -572,6 +592,7 @@ export type ConsultantMaxOrderByAggregateInput = {
   averageRating?: Prisma.SortOrder
   totalSessions?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
+  applicationPaymentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -588,6 +609,7 @@ export type ConsultantMinOrderByAggregateInput = {
   averageRating?: Prisma.SortOrder
   totalSessions?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
+  applicationPaymentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -711,6 +733,7 @@ export type ConsultantCreateWithoutUserInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   availabilities?: Prisma.ConsultantAvailabilityCreateNestedManyWithoutConsultantInput
@@ -731,6 +754,7 @@ export type ConsultantUncheckedCreateWithoutUserInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   availabilities?: Prisma.ConsultantAvailabilityUncheckedCreateNestedManyWithoutConsultantInput
@@ -767,6 +791,7 @@ export type ConsultantUpdateWithoutUserInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   availabilities?: Prisma.ConsultantAvailabilityUpdateManyWithoutConsultantNestedInput
@@ -787,6 +812,7 @@ export type ConsultantUncheckedUpdateWithoutUserInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   availabilities?: Prisma.ConsultantAvailabilityUncheckedUpdateManyWithoutConsultantNestedInput
@@ -807,6 +833,7 @@ export type ConsultantCreateWithoutBookingsInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutConsultantInput
@@ -828,6 +855,7 @@ export type ConsultantUncheckedCreateWithoutBookingsInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   availabilities?: Prisma.ConsultantAvailabilityUncheckedCreateNestedManyWithoutConsultantInput
@@ -863,6 +891,7 @@ export type ConsultantUpdateWithoutBookingsInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutConsultantNestedInput
@@ -884,6 +913,7 @@ export type ConsultantUncheckedUpdateWithoutBookingsInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   availabilities?: Prisma.ConsultantAvailabilityUncheckedUpdateManyWithoutConsultantNestedInput
@@ -903,6 +933,7 @@ export type ConsultantCreateWithoutReviewsInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutConsultantInput
@@ -924,6 +955,7 @@ export type ConsultantUncheckedCreateWithoutReviewsInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   availabilities?: Prisma.ConsultantAvailabilityUncheckedCreateNestedManyWithoutConsultantInput
@@ -959,6 +991,7 @@ export type ConsultantUpdateWithoutReviewsInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutConsultantNestedInput
@@ -980,6 +1013,7 @@ export type ConsultantUncheckedUpdateWithoutReviewsInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   availabilities?: Prisma.ConsultantAvailabilityUncheckedUpdateManyWithoutConsultantNestedInput
@@ -999,6 +1033,7 @@ export type ConsultantCreateWithoutAvailabilitiesInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutConsultantInput
@@ -1020,6 +1055,7 @@ export type ConsultantUncheckedCreateWithoutAvailabilitiesInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutConsultantInput
@@ -1055,6 +1091,7 @@ export type ConsultantUpdateWithoutAvailabilitiesInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutConsultantNestedInput
@@ -1076,6 +1113,7 @@ export type ConsultantUncheckedUpdateWithoutAvailabilitiesInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutConsultantNestedInput
@@ -1095,6 +1133,7 @@ export type ConsultantCreateWithoutTemplatesInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutConsultantInput
@@ -1116,6 +1155,7 @@ export type ConsultantUncheckedCreateWithoutTemplatesInput = {
   averageRating?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: number
   isAvailable?: boolean
+  applicationPaymentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   availabilities?: Prisma.ConsultantAvailabilityUncheckedCreateNestedManyWithoutConsultantInput
@@ -1151,6 +1191,7 @@ export type ConsultantUpdateWithoutTemplatesInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutConsultantNestedInput
@@ -1172,6 +1213,7 @@ export type ConsultantUncheckedUpdateWithoutTemplatesInput = {
   averageRating?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   totalSessions?: Prisma.IntFieldUpdateOperationsInput | number
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicationPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   availabilities?: Prisma.ConsultantAvailabilityUncheckedUpdateManyWithoutConsultantNestedInput
@@ -1250,6 +1292,7 @@ export type ConsultantSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   averageRating?: boolean
   totalSessions?: boolean
   isAvailable?: boolean
+  applicationPaymentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1273,6 +1316,7 @@ export type ConsultantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   averageRating?: boolean
   totalSessions?: boolean
   isAvailable?: boolean
+  applicationPaymentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1291,6 +1335,7 @@ export type ConsultantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   averageRating?: boolean
   totalSessions?: boolean
   isAvailable?: boolean
+  applicationPaymentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1309,11 +1354,12 @@ export type ConsultantSelectScalar = {
   averageRating?: boolean
   totalSessions?: boolean
   isAvailable?: boolean
+  applicationPaymentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ConsultantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "verificationStatus" | "professionalTitle" | "licenseNumber" | "bio" | "hourlyRate" | "yearsExperience" | "specializations" | "averageRating" | "totalSessions" | "isAvailable" | "createdAt" | "updatedAt", ExtArgs["result"]["consultant"]>
+export type ConsultantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "verificationStatus" | "professionalTitle" | "licenseNumber" | "bio" | "hourlyRate" | "yearsExperience" | "specializations" | "averageRating" | "totalSessions" | "isAvailable" | "applicationPaymentId" | "createdAt" | "updatedAt", ExtArgs["result"]["consultant"]>
 export type ConsultantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   availabilities?: boolean | Prisma.Consultant$availabilitiesArgs<ExtArgs>
@@ -1351,6 +1397,7 @@ export type $ConsultantPayload<ExtArgs extends runtime.Types.Extensions.Internal
     averageRating: runtime.Decimal | null
     totalSessions: number
     isAvailable: boolean
+    applicationPaymentId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["consultant"]>
@@ -1793,6 +1840,7 @@ export interface ConsultantFieldRefs {
   readonly averageRating: Prisma.FieldRef<"Consultant", 'Decimal'>
   readonly totalSessions: Prisma.FieldRef<"Consultant", 'Int'>
   readonly isAvailable: Prisma.FieldRef<"Consultant", 'Boolean'>
+  readonly applicationPaymentId: Prisma.FieldRef<"Consultant", 'String'>
   readonly createdAt: Prisma.FieldRef<"Consultant", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Consultant", 'DateTime'>
 }

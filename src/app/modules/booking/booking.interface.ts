@@ -40,14 +40,14 @@ export interface IBookingFilters {
 }
 
 export interface IBookingWithDetails extends IBooking {
-    client: {
+    client?: {
         id: string;
         name?: string | null;
         nickname?: {
             handle: string;
         } | null;
     };
-    consultant: {
+    consultant?: {
         id: string;
         user: {
             name?: string | null;

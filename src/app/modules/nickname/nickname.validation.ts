@@ -12,6 +12,12 @@ const createNicknameSchema = z.object({
 });
 
 const updateNicknameSchema = z.object({
+    handle: z
+        .string()
+        .min(3, "Handle must be at least 3 characters")
+        .max(30, "Handle must be at most 30 characters")
+        .regex(handleRegex, "Handle can only contain letters, numbers, and underscores")
+        .optional(),
     avatarUrl: z.string().url("Invalid URL").optional(),
 });
 

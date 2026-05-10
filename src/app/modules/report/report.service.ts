@@ -114,20 +114,6 @@ const getAllReports = async (
                         },
                     },
                 },
-                post: {
-                    select: {
-                        id: true,
-                        content: true,
-                        authorId: true,
-                    },
-                },
-                comment: {
-                    select: {
-                        id: true,
-                        content: true,
-                        authorId: true,
-                    },
-                },
             },
         }),
         prisma.report.count({ where }),
@@ -148,20 +134,6 @@ const getReportById = async (id: string): Promise<IReportWithDetails | null> => 
                             handle: true,
                         },
                     },
-                },
-            },
-            post: {
-                select: {
-                    id: true,
-                    content: true,
-                    authorId: true,
-                },
-            },
-            comment: {
-                select: {
-                    id: true,
-                    content: true,
-                    authorId: true,
                 },
             },
         },
