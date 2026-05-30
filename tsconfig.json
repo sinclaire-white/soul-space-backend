@@ -3,7 +3,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "es2023",
-    "rootDir": "./",
+    "rootDir": "./src",
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
@@ -11,8 +11,7 @@
     "forceConsistentCasingInFileNames": true,
     "ignoreDeprecations": "6.0",
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node"],
-    
+    "types": ["node"]
   },
   "include": ["src", "prisma.config.ts", "prisma/generated"],
   "exclude": ["node_modules", "dist"]
