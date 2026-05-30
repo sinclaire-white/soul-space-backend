@@ -1,18 +1,22 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "target": "es2023",
+
     "rootDir": "./",
     "outDir": "./dist",
+
     "strict": true,
     "esModuleInterop": true,
+
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "ignoreDeprecations": "6.0",
+
     "typeRoots": ["./node_modules/@types"],
     "types": ["node"]
   },
+
   "include": ["src", "prisma/generated"],
   "exclude": ["node_modules", "dist"]
 }
