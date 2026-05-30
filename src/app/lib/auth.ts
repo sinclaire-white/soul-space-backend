@@ -17,10 +17,8 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: true,
-        // THIS handles the built-in email verification (link-based)
-        sendVerificationEmail: async ({ user, url }) => {
+        sendVerificationEmail: async ({ user, url }: { user: { email: string; name?: string | null }; url: string }) => {
             console.log("🔥 sendVerificationEmail called for:", user.email);
-            console.log("🔥 verification URL:", url);
             
             await sendEmail({
                 to: user.email,
@@ -28,7 +26,7 @@ export const auth = betterAuth({
                 templateName: "otp",
                 templateData: {
                     name: user.name || "Soul Space User",
-                    otp: url, // Pass the URL as OTP for now, or create a new template
+                    otp: url,
                 }
             });
         },
