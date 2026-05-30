@@ -21,14 +21,6 @@ services:
         sync: false
       - key: FRONTEND_URL
         sync: false
-      - key: ACCESS_TOKEN_SECRET
-        sync: false
-      - key: REFRESH_TOKEN_SECRET
-        sync: false
-      - key: ACCESS_TOKEN_EXPIRES_IN
-        value: 1d
-      - key: REFRESH_TOKEN_EXPIRES_IN
-        value: 7d
       - key: SUPER_ADMIN_EMAIL
         sync: false
       - key: SUPER_ADMIN_PASSWORD
