@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import ejs from "ejs";
 import status from "http-status";
 import nodemailer from "nodemailer";
@@ -21,14 +20,14 @@ const getTransporter = () => {
 
     return nodemailer.createTransport({
         host: envVars.SMTP_HOST,
+        port: Number(envVars.SMTP_PORT),
         secure: Number(envVars.SMTP_PORT) === 465,
         auth: {
             user: envVars.SMTP_USER,
             pass: envVars.SMTP_PASS
-        },
-        port: Number(envVars.SMTP_PORT)
-    })
-}
+        }
+    });
+};
 
 interface SendEmailOptions {
     to: string;
@@ -39,17 +38,16 @@ interface SendEmailOptions {
         filename: string;
         content: Buffer | string;
         contentType: string;
-    }[]
+    }[];
 }
 
 export const sendEmail = async ({ subject, templateData, templateName, to, attachments }: SendEmailOptions) => {
     try {
         if (!isEmailConfigured()) {
             if (envVars.NODE_ENV !== "production") {
-                console.warn(`Email service not configured. Skipping email to ${to} with subject \"${subject}\".`);
+                console.warn(`Email service not configured. Skipping email to ${to} with subject "${subject}".`);
                 return;
             }
-
             throw new AppError(status.INTERNAL_SERVER_ERROR, "Email service is not configured");
         }
 
@@ -68,7 +66,7 @@ export const sendEmail = async ({ subject, templateData, templateName, to, attac
                 content: attachment.content,
                 contentType: attachment.contentType,
             }))
-        })
+        });
 
         console.log(`Email sent to ${to} : ${info.messageId}`);
     } catch (error: any) {
@@ -81,4 +79,4 @@ export const sendEmail = async ({ subject, templateData, templateName, to, attac
 
         throw new AppError(status.INTERNAL_SERVER_ERROR, "Failed to send email");
     }
-}
+};
