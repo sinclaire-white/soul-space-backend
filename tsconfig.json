@@ -9,9 +9,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "ignoreDeprecations": "5.0",
+    "ignoreDeprecations": "6.0",
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node"]
+    "types": ["node"],
+    
   },
   "include": ["src", "prisma.config.ts", "prisma/generated"],
   "exclude": ["node_modules", "dist"]

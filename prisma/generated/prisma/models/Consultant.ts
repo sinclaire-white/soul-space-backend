@@ -47,6 +47,7 @@ export type ConsultantMinAggregateOutputType = {
   professionalTitle: string | null
   licenseNumber: string | null
   bio: string | null
+  address: string | null
   hourlyRate: runtime.Decimal | null
   yearsExperience: number | null
   averageRating: runtime.Decimal | null
@@ -64,6 +65,7 @@ export type ConsultantMaxAggregateOutputType = {
   professionalTitle: string | null
   licenseNumber: string | null
   bio: string | null
+  address: string | null
   hourlyRate: runtime.Decimal | null
   yearsExperience: number | null
   averageRating: runtime.Decimal | null
@@ -81,6 +83,7 @@ export type ConsultantCountAggregateOutputType = {
   professionalTitle: number
   licenseNumber: number
   bio: number
+  address: number
   hourlyRate: number
   yearsExperience: number
   specializations: number
@@ -115,6 +118,7 @@ export type ConsultantMinAggregateInputType = {
   professionalTitle?: true
   licenseNumber?: true
   bio?: true
+  address?: true
   hourlyRate?: true
   yearsExperience?: true
   averageRating?: true
@@ -132,6 +136,7 @@ export type ConsultantMaxAggregateInputType = {
   professionalTitle?: true
   licenseNumber?: true
   bio?: true
+  address?: true
   hourlyRate?: true
   yearsExperience?: true
   averageRating?: true
@@ -149,6 +154,7 @@ export type ConsultantCountAggregateInputType = {
   professionalTitle?: true
   licenseNumber?: true
   bio?: true
+  address?: true
   hourlyRate?: true
   yearsExperience?: true
   specializations?: true
@@ -254,6 +260,7 @@ export type ConsultantGroupByOutputType = {
   professionalTitle: string
   licenseNumber: string | null
   bio: string | null
+  address: string | null
   hourlyRate: runtime.Decimal
   yearsExperience: number
   specializations: runtime.JsonValue
@@ -295,6 +302,7 @@ export type ConsultantWhereInput = {
   professionalTitle?: Prisma.StringFilter<"Consultant"> | string
   licenseNumber?: Prisma.StringNullableFilter<"Consultant"> | string | null
   bio?: Prisma.StringNullableFilter<"Consultant"> | string | null
+  address?: Prisma.StringNullableFilter<"Consultant"> | string | null
   hourlyRate?: Prisma.DecimalFilter<"Consultant"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFilter<"Consultant"> | number
   specializations?: Prisma.JsonFilter<"Consultant">
@@ -318,6 +326,7 @@ export type ConsultantOrderByWithRelationInput = {
   professionalTitle?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   hourlyRate?: Prisma.SortOrder
   yearsExperience?: Prisma.SortOrder
   specializations?: Prisma.SortOrder
@@ -344,6 +353,7 @@ export type ConsultantWhereUniqueInput = Prisma.AtLeast<{
   professionalTitle?: Prisma.StringFilter<"Consultant"> | string
   licenseNumber?: Prisma.StringNullableFilter<"Consultant"> | string | null
   bio?: Prisma.StringNullableFilter<"Consultant"> | string | null
+  address?: Prisma.StringNullableFilter<"Consultant"> | string | null
   hourlyRate?: Prisma.DecimalFilter<"Consultant"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFilter<"Consultant"> | number
   specializations?: Prisma.JsonFilter<"Consultant">
@@ -367,6 +377,7 @@ export type ConsultantOrderByWithAggregationInput = {
   professionalTitle?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
   hourlyRate?: Prisma.SortOrder
   yearsExperience?: Prisma.SortOrder
   specializations?: Prisma.SortOrder
@@ -393,6 +404,7 @@ export type ConsultantScalarWhereWithAggregatesInput = {
   professionalTitle?: Prisma.StringWithAggregatesFilter<"Consultant"> | string
   licenseNumber?: Prisma.StringNullableWithAggregatesFilter<"Consultant"> | string | null
   bio?: Prisma.StringNullableWithAggregatesFilter<"Consultant"> | string | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"Consultant"> | string | null
   hourlyRate?: Prisma.DecimalWithAggregatesFilter<"Consultant"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntWithAggregatesFilter<"Consultant"> | number
   specializations?: Prisma.JsonWithAggregatesFilter<"Consultant">
@@ -410,6 +422,7 @@ export type ConsultantCreateInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -433,6 +446,7 @@ export type ConsultantUncheckedCreateInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -454,6 +468,7 @@ export type ConsultantUpdateInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -477,6 +492,7 @@ export type ConsultantUncheckedUpdateInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -499,6 +515,7 @@ export type ConsultantCreateManyInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -516,6 +533,7 @@ export type ConsultantUpdateManyMutationInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -534,6 +552,7 @@ export type ConsultantUncheckedUpdateManyInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -562,6 +581,7 @@ export type ConsultantCountOrderByAggregateInput = {
   professionalTitle?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   bio?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   hourlyRate?: Prisma.SortOrder
   yearsExperience?: Prisma.SortOrder
   specializations?: Prisma.SortOrder
@@ -587,6 +607,7 @@ export type ConsultantMaxOrderByAggregateInput = {
   professionalTitle?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   bio?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   hourlyRate?: Prisma.SortOrder
   yearsExperience?: Prisma.SortOrder
   averageRating?: Prisma.SortOrder
@@ -604,6 +625,7 @@ export type ConsultantMinOrderByAggregateInput = {
   professionalTitle?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   bio?: Prisma.SortOrder
+  address?: Prisma.SortOrder
   hourlyRate?: Prisma.SortOrder
   yearsExperience?: Prisma.SortOrder
   averageRating?: Prisma.SortOrder
@@ -727,6 +749,7 @@ export type ConsultantCreateWithoutUserInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -748,6 +771,7 @@ export type ConsultantUncheckedCreateWithoutUserInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -785,6 +809,7 @@ export type ConsultantUpdateWithoutUserInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -806,6 +831,7 @@ export type ConsultantUncheckedUpdateWithoutUserInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -827,6 +853,7 @@ export type ConsultantCreateWithoutBookingsInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -849,6 +876,7 @@ export type ConsultantUncheckedCreateWithoutBookingsInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -885,6 +913,7 @@ export type ConsultantUpdateWithoutBookingsInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -907,6 +936,7 @@ export type ConsultantUncheckedUpdateWithoutBookingsInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -927,6 +957,7 @@ export type ConsultantCreateWithoutReviewsInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -949,6 +980,7 @@ export type ConsultantUncheckedCreateWithoutReviewsInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -985,6 +1017,7 @@ export type ConsultantUpdateWithoutReviewsInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1007,6 +1040,7 @@ export type ConsultantUncheckedUpdateWithoutReviewsInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1027,6 +1061,7 @@ export type ConsultantCreateWithoutAvailabilitiesInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1049,6 +1084,7 @@ export type ConsultantUncheckedCreateWithoutAvailabilitiesInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1085,6 +1121,7 @@ export type ConsultantUpdateWithoutAvailabilitiesInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1107,6 +1144,7 @@ export type ConsultantUncheckedUpdateWithoutAvailabilitiesInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1127,6 +1165,7 @@ export type ConsultantCreateWithoutTemplatesInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1149,6 +1188,7 @@ export type ConsultantUncheckedCreateWithoutTemplatesInput = {
   professionalTitle: string
   licenseNumber?: string | null
   bio?: string | null
+  address?: string | null
   hourlyRate: runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience: number
   specializations: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1185,6 +1225,7 @@ export type ConsultantUpdateWithoutTemplatesInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1207,6 +1248,7 @@ export type ConsultantUncheckedUpdateWithoutTemplatesInput = {
   professionalTitle?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hourlyRate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   yearsExperience?: Prisma.IntFieldUpdateOperationsInput | number
   specializations?: Prisma.JsonNullValueInput | runtime.InputJsonValue
@@ -1286,6 +1328,7 @@ export type ConsultantSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   professionalTitle?: boolean
   licenseNumber?: boolean
   bio?: boolean
+  address?: boolean
   hourlyRate?: boolean
   yearsExperience?: boolean
   specializations?: boolean
@@ -1310,6 +1353,7 @@ export type ConsultantSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   professionalTitle?: boolean
   licenseNumber?: boolean
   bio?: boolean
+  address?: boolean
   hourlyRate?: boolean
   yearsExperience?: boolean
   specializations?: boolean
@@ -1329,6 +1373,7 @@ export type ConsultantSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   professionalTitle?: boolean
   licenseNumber?: boolean
   bio?: boolean
+  address?: boolean
   hourlyRate?: boolean
   yearsExperience?: boolean
   specializations?: boolean
@@ -1348,6 +1393,7 @@ export type ConsultantSelectScalar = {
   professionalTitle?: boolean
   licenseNumber?: boolean
   bio?: boolean
+  address?: boolean
   hourlyRate?: boolean
   yearsExperience?: boolean
   specializations?: boolean
@@ -1359,7 +1405,7 @@ export type ConsultantSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ConsultantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "verificationStatus" | "professionalTitle" | "licenseNumber" | "bio" | "hourlyRate" | "yearsExperience" | "specializations" | "averageRating" | "totalSessions" | "isAvailable" | "applicationPaymentId" | "createdAt" | "updatedAt", ExtArgs["result"]["consultant"]>
+export type ConsultantOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "verificationStatus" | "professionalTitle" | "licenseNumber" | "bio" | "address" | "hourlyRate" | "yearsExperience" | "specializations" | "averageRating" | "totalSessions" | "isAvailable" | "applicationPaymentId" | "createdAt" | "updatedAt", ExtArgs["result"]["consultant"]>
 export type ConsultantInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   availabilities?: boolean | Prisma.Consultant$availabilitiesArgs<ExtArgs>
@@ -1391,6 +1437,7 @@ export type $ConsultantPayload<ExtArgs extends runtime.Types.Extensions.Internal
     professionalTitle: string
     licenseNumber: string | null
     bio: string | null
+    address: string | null
     hourlyRate: runtime.Decimal
     yearsExperience: number
     specializations: runtime.JsonValue
@@ -1834,6 +1881,7 @@ export interface ConsultantFieldRefs {
   readonly professionalTitle: Prisma.FieldRef<"Consultant", 'String'>
   readonly licenseNumber: Prisma.FieldRef<"Consultant", 'String'>
   readonly bio: Prisma.FieldRef<"Consultant", 'String'>
+  readonly address: Prisma.FieldRef<"Consultant", 'String'>
   readonly hourlyRate: Prisma.FieldRef<"Consultant", 'Decimal'>
   readonly yearsExperience: Prisma.FieldRef<"Consultant", 'Int'>
   readonly specializations: Prisma.FieldRef<"Consultant", 'Json'>

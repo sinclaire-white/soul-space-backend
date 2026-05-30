@@ -5,6 +5,7 @@ model Consultant {
   professionalTitle    String             @db.VarChar(255)
   licenseNumber        String?            @db.VarChar(255)
   bio                  String?            @db.Text
+  address              String?            @db.VarChar(500)
   hourlyRate           Decimal            @db.Decimal(10, 2)
   yearsExperience      Int
   specializations      Json

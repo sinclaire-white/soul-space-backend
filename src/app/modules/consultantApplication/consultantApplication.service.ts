@@ -87,6 +87,10 @@ const submitApplication = async (
         throw new AppError(status.CONFLICT, "You already have a pending consultant application");
     }
 
+    const availabilityDays = Array.isArray(payload.availabilityDays)
+        ? payload.availabilityDays
+        : JSON.parse(payload.availabilityDays as unknown as string || "[]");
+
     if (existingApplication) {
         return prisma.consultantApplication.update({
             where: { id: existingApplication.id },
@@ -96,6 +100,10 @@ const submitApplication = async (
                 phone: payload.phone,
                 address: payload.address,
                 age: payload.age,
+                hourlyRate: payload.hourlyRate,
+                availabilityDays,
+                availableFrom: payload.availableFrom,
+                availableTo: payload.availableTo,
                 certificationDocumentUrl: uploaded.url,
                 paymentIntentId: payload.paymentIntentId,
                 status: ApplicationStatus.PENDING,
@@ -123,6 +131,10 @@ const submitApplication = async (
             phone: payload.phone,
             address: payload.address,
             age: payload.age,
+            hourlyRate: payload.hourlyRate,
+            availabilityDays,
+            availableFrom: payload.availableFrom,
+            availableTo: payload.availableTo,
             certificationDocumentUrl: uploaded.url,
             paymentIntentId: payload.paymentIntentId,
             status: ApplicationStatus.PENDING,
@@ -260,15 +272,74 @@ const reviewApplication = async (
                 await tx.consultant.create({
                     data: {
                         userId: application.userId,
-                        professionalTitle: "Verified Consultant",
-                        bio: "Consultant account approved by admin.",
-                        hourlyRate: 0,
+                        professionalTitle: application.fullName,
+                        bio: `Certified professional with experience in mental health services.`,
+                        address: application.address,
+                        hourlyRate: application.hourlyRate || 0,
                         yearsExperience: 0,
                         specializations: [],
                         verificationStatus: VerificationStatus.VERIFIED,
                         applicationPaymentId: application.paymentIntentId,
                     },
                 });
+            }
+
+            // Create recurring consultant availability rows from the application availabilityDays
+            // If the applicant provided availabilityDays and time window, create availability entries
+            try {
+                const availabilityDays: string[] = application.availabilityDays ?? [];
+                const from = application.availableFrom; // e.g. "10:00"
+                const to = application.availableTo; // e.g. "18:00"
+
+                if (availabilityDays && availabilityDays.length && from && to) {
+                    const dayNameToIndex: Record<string, number> = {
+                        Sunday: 0,
+                        Monday: 1,
+                        Tuesday: 2,
+                        Wednesday: 3,
+                        Thursday: 4,
+                        Friday: 5,
+                        Saturday: 6,
+                    };
+
+                    const existing = await tx.consultant.findUnique({ where: { userId: application.userId } });
+                    const consultantId = existing?.id;
+
+                    if (consultantId) {
+                        for (const dayName of availabilityDays) {
+                            const dayIndex = dayNameToIndex[dayName];
+                            if (dayIndex === undefined) continue;
+
+                            // Only create if there's no availability for that day yet
+                            const already = await tx.consultantAvailability.findFirst({ where: { consultantId, dayOfWeek: dayIndex } });
+                            if (already) continue;
+
+                            // Parse times into Date using a neutral base date (UTC)
+                            const base = new Date("2000-01-01T00:00:00.000Z");
+                            const [fromH, fromM] = from.split(":").map(Number);
+                            const [toH, toM] = to.split(":").map(Number);
+                            const startTime = new Date(base);
+                            startTime.setUTCHours(fromH ?? 0, fromM ?? 0, 0, 0);
+                            const endTime = new Date(base);
+                            endTime.setUTCHours(toH ?? 0, toM ?? 0, 0, 0);
+
+                            await tx.consultantAvailability.create({
+                                data: {
+                                    consultantId,
+                                    dayOfWeek: dayIndex,
+                                    startTime,
+                                    endTime,
+                                    isRecurring: true,
+                                    isBlocked: false,
+                                },
+                            });
+                        }
+                    }
+                }
+            } catch (e) {
+                // don't fail the whole transaction if availability creation fails; log for manual inspection
+                
+                console.error("Failed to create availabilities from application:", e);
             }
         }
 

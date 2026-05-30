@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 
 dotenv.config();
 
@@ -16,9 +16,12 @@ export const uploadToCloudinary = async (
     folder: string = "soul-space"
 ): Promise<{ url: string; publicId: string }> => {
     try {
+        const isPdfUpload = /^data:application\/pdf;/i.test(file);
+        const resourceType = isPdfUpload ? "raw" : "auto";
+
         const result = await cloudinary.uploader.upload(file, {
             folder,
-            resource_type: "auto",
+            resource_type: resourceType,
         });
 
         return {

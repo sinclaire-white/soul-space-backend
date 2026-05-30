@@ -2,15 +2,12 @@ import { prisma } from "../../lib/prisma";
 import AppError from "../../errorHelpers/AppError";
 import status from "http-status";
 import { IAvailability, IAvailabilityCreate, IAvailabilityUpdate, ITimeSlot, IDaySchedule } from "./availability.interface";
-import { addDays, startOfDay, format, parseISO } from "date-fns";
-
-const BUFFER_MINUTES = 15;
+import { addDays } from "date-fns";
 
 const createAvailability = async (
     consultantId: string,
     payload: IAvailabilityCreate
 ): Promise<IAvailability> => {
-    // Check for overlapping slots
     const existingSlots = await prisma.consultantAvailability.findMany({
         where: {
             consultantId,
@@ -71,15 +68,16 @@ const getAvailableSlots = async (
     fromDate: Date = new Date(),
     days: number = 14
 ): Promise<IDaySchedule[]> => {
-    // Get consultant's availabilities
     const availabilities = await prisma.consultantAvailability.findMany({
         where: {
             consultantId,
             isBlocked: false,
         },
+        select: { dayOfWeek: true },
     });
 
-    // Get existing bookings
+    const availableDays = new Set(availabilities.map((a) => a.dayOfWeek));
+
     const endDate = addDays(fromDate, days);
     const bookings = await prisma.booking.findMany({
         where: {
@@ -98,57 +96,40 @@ const getAvailableSlots = async (
 
     for (let i = 0; i < days; i++) {
         const currentDate = addDays(fromDate, i);
-        const dayOfWeek = currentDate.getDay();
+        const dayOfWeek = currentDate.getUTCDay();
 
-        // Find availabilities for this day
-        const dayAvailabilities = availabilities.filter(
-            (a) => a.dayOfWeek === dayOfWeek
-        );
-
-        if (dayAvailabilities.length === 0) {
+        if (!availableDays.has(dayOfWeek)) {
             continue;
         }
 
         const slots: ITimeSlot[] = [];
 
-        for (const availability of dayAvailabilities) {
-            const availStart = new Date(availability.startTime);
-            const availEnd = new Date(availability.endTime);
+        for (let hour = 10; hour < 22; hour++) {
+            const slotStart = new Date(Date.UTC(
+                currentDate.getUTCFullYear(),
+                currentDate.getUTCMonth(),
+                currentDate.getUTCDate(),
+                hour, 0, 0
+            ));
 
-            // Create slots (60 min each + 15 min buffer)
-            const slotDuration = 60;
-            const buffer = BUFFER_MINUTES;
-            const totalSlotTime = slotDuration + buffer;
+            const slotEnd = new Date(Date.UTC(
+                currentDate.getUTCFullYear(),
+                currentDate.getUTCMonth(),
+                currentDate.getUTCDate(),
+                hour + 1, 0, 0
+            ));
 
-            let slotStart = new Date(availStart);
+            const isBooked = bookings.some((booking) => {
+                const bookingStart = new Date(booking.scheduledAt).getTime();
+                const bookingEnd = bookingStart + booking.durationMinutes * 60000;
+                return slotStart.getTime() < bookingEnd && slotEnd.getTime() > bookingStart;
+            });
 
-            while (slotStart.getTime() + slotDuration * 60000 <= availEnd.getTime()) {
-                const slotEnd = new Date(slotStart.getTime() + slotDuration * 60000);
-
-                // Check if slot overlaps with any booking
-                const isBooked = bookings.some((booking) => {
-                    const bookingStart = new Date(booking.scheduledAt);
-                    const bookingEnd = new Date(
-                        bookingStart.getTime() + booking.durationMinutes * 60000
-                    );
-                    return slotStart < bookingEnd && slotEnd > bookingStart;
-                });
-
-                slots.push({
-                    startTime: new Date(currentDate.setHours(
-                        slotStart.getHours(),
-                        slotStart.getMinutes()
-                    )),
-                    endTime: new Date(currentDate.setHours(
-                        slotEnd.getHours(),
-                        slotEnd.getMinutes()
-                    )),
-                    isAvailable: !isBooked,
-                });
-
-                // Move to next slot
-                slotStart = new Date(slotStart.getTime() + totalSlotTime * 60000);
-            }
+            slots.push({
+                startTime: slotStart,
+                endTime: slotEnd,
+                isAvailable: !isBooked,
+            });
         }
 
         if (slots.length > 0) {
@@ -168,7 +149,6 @@ const updateAvailability = async (
     consultantId: string,
     payload: IAvailabilityUpdate
 ): Promise<IAvailability | null> => {
-    // Check if availability belongs to consultant
     const existing = await prisma.consultantAvailability.findFirst({
         where: { id, consultantId },
     });

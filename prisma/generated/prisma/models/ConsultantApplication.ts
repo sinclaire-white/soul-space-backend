@@ -28,10 +28,12 @@ export type AggregateConsultantApplication = {
 
 export type ConsultantApplicationAvgAggregateOutputType = {
   age: number | null
+  hourlyRate: runtime.Decimal | null
 }
 
 export type ConsultantApplicationSumAggregateOutputType = {
   age: number | null
+  hourlyRate: runtime.Decimal | null
 }
 
 export type ConsultantApplicationMinAggregateOutputType = {
@@ -43,6 +45,9 @@ export type ConsultantApplicationMinAggregateOutputType = {
   phone: string | null
   address: string | null
   age: number | null
+  hourlyRate: runtime.Decimal | null
+  availableFrom: string | null
+  availableTo: string | null
   certificationDocumentUrl: string | null
   paymentIntentId: string | null
   reviewNote: string | null
@@ -61,6 +66,9 @@ export type ConsultantApplicationMaxAggregateOutputType = {
   phone: string | null
   address: string | null
   age: number | null
+  hourlyRate: runtime.Decimal | null
+  availableFrom: string | null
+  availableTo: string | null
   certificationDocumentUrl: string | null
   paymentIntentId: string | null
   reviewNote: string | null
@@ -79,6 +87,10 @@ export type ConsultantApplicationCountAggregateOutputType = {
   phone: number
   address: number
   age: number
+  hourlyRate: number
+  availabilityDays: number
+  availableFrom: number
+  availableTo: number
   certificationDocumentUrl: number
   paymentIntentId: number
   reviewNote: number
@@ -92,10 +104,12 @@ export type ConsultantApplicationCountAggregateOutputType = {
 
 export type ConsultantApplicationAvgAggregateInputType = {
   age?: true
+  hourlyRate?: true
 }
 
 export type ConsultantApplicationSumAggregateInputType = {
   age?: true
+  hourlyRate?: true
 }
 
 export type ConsultantApplicationMinAggregateInputType = {
@@ -107,6 +121,9 @@ export type ConsultantApplicationMinAggregateInputType = {
   phone?: true
   address?: true
   age?: true
+  hourlyRate?: true
+  availableFrom?: true
+  availableTo?: true
   certificationDocumentUrl?: true
   paymentIntentId?: true
   reviewNote?: true
@@ -125,6 +142,9 @@ export type ConsultantApplicationMaxAggregateInputType = {
   phone?: true
   address?: true
   age?: true
+  hourlyRate?: true
+  availableFrom?: true
+  availableTo?: true
   certificationDocumentUrl?: true
   paymentIntentId?: true
   reviewNote?: true
@@ -143,6 +163,10 @@ export type ConsultantApplicationCountAggregateInputType = {
   phone?: true
   address?: true
   age?: true
+  hourlyRate?: true
+  availabilityDays?: true
+  availableFrom?: true
+  availableTo?: true
   certificationDocumentUrl?: true
   paymentIntentId?: true
   reviewNote?: true
@@ -248,6 +272,10 @@ export type ConsultantApplicationGroupByOutputType = {
   phone: string
   address: string
   age: number
+  hourlyRate: runtime.Decimal | null
+  availabilityDays: string[]
+  availableFrom: string
+  availableTo: string
   certificationDocumentUrl: string
   paymentIntentId: string
   reviewNote: string | null
@@ -289,6 +317,10 @@ export type ConsultantApplicationWhereInput = {
   phone?: Prisma.StringFilter<"ConsultantApplication"> | string
   address?: Prisma.StringFilter<"ConsultantApplication"> | string
   age?: Prisma.IntFilter<"ConsultantApplication"> | number
+  hourlyRate?: Prisma.DecimalNullableFilter<"ConsultantApplication"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.StringNullableListFilter<"ConsultantApplication">
+  availableFrom?: Prisma.StringFilter<"ConsultantApplication"> | string
+  availableTo?: Prisma.StringFilter<"ConsultantApplication"> | string
   certificationDocumentUrl?: Prisma.StringFilter<"ConsultantApplication"> | string
   paymentIntentId?: Prisma.StringFilter<"ConsultantApplication"> | string
   reviewNote?: Prisma.StringNullableFilter<"ConsultantApplication"> | string | null
@@ -309,6 +341,10 @@ export type ConsultantApplicationOrderByWithRelationInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   age?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  availabilityDays?: Prisma.SortOrder
+  availableFrom?: Prisma.SortOrder
+  availableTo?: Prisma.SortOrder
   certificationDocumentUrl?: Prisma.SortOrder
   paymentIntentId?: Prisma.SortOrder
   reviewNote?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -333,6 +369,10 @@ export type ConsultantApplicationWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringFilter<"ConsultantApplication"> | string
   address?: Prisma.StringFilter<"ConsultantApplication"> | string
   age?: Prisma.IntFilter<"ConsultantApplication"> | number
+  hourlyRate?: Prisma.DecimalNullableFilter<"ConsultantApplication"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.StringNullableListFilter<"ConsultantApplication">
+  availableFrom?: Prisma.StringFilter<"ConsultantApplication"> | string
+  availableTo?: Prisma.StringFilter<"ConsultantApplication"> | string
   certificationDocumentUrl?: Prisma.StringFilter<"ConsultantApplication"> | string
   reviewNote?: Prisma.StringNullableFilter<"ConsultantApplication"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"ConsultantApplication"> | Date | string | null
@@ -352,6 +392,10 @@ export type ConsultantApplicationOrderByWithAggregationInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   age?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  availabilityDays?: Prisma.SortOrder
+  availableFrom?: Prisma.SortOrder
+  availableTo?: Prisma.SortOrder
   certificationDocumentUrl?: Prisma.SortOrder
   paymentIntentId?: Prisma.SortOrder
   reviewNote?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -378,6 +422,10 @@ export type ConsultantApplicationScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringWithAggregatesFilter<"ConsultantApplication"> | string
   address?: Prisma.StringWithAggregatesFilter<"ConsultantApplication"> | string
   age?: Prisma.IntWithAggregatesFilter<"ConsultantApplication"> | number
+  hourlyRate?: Prisma.DecimalNullableWithAggregatesFilter<"ConsultantApplication"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.StringNullableListFilter<"ConsultantApplication">
+  availableFrom?: Prisma.StringWithAggregatesFilter<"ConsultantApplication"> | string
+  availableTo?: Prisma.StringWithAggregatesFilter<"ConsultantApplication"> | string
   certificationDocumentUrl?: Prisma.StringWithAggregatesFilter<"ConsultantApplication"> | string
   paymentIntentId?: Prisma.StringWithAggregatesFilter<"ConsultantApplication"> | string
   reviewNote?: Prisma.StringNullableWithAggregatesFilter<"ConsultantApplication"> | string | null
@@ -395,6 +443,10 @@ export type ConsultantApplicationCreateInput = {
   phone: string
   address: string
   age: number
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationCreateavailabilityDaysInput | string[]
+  availableFrom?: string
+  availableTo?: string
   certificationDocumentUrl: string
   paymentIntentId: string
   reviewNote?: string | null
@@ -414,6 +466,10 @@ export type ConsultantApplicationUncheckedCreateInput = {
   phone: string
   address: string
   age: number
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationCreateavailabilityDaysInput | string[]
+  availableFrom?: string
+  availableTo?: string
   certificationDocumentUrl: string
   paymentIntentId: string
   reviewNote?: string | null
@@ -431,6 +487,10 @@ export type ConsultantApplicationUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationUpdateavailabilityDaysInput | string[]
+  availableFrom?: Prisma.StringFieldUpdateOperationsInput | string
+  availableTo?: Prisma.StringFieldUpdateOperationsInput | string
   certificationDocumentUrl?: Prisma.StringFieldUpdateOperationsInput | string
   paymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -450,6 +510,10 @@ export type ConsultantApplicationUncheckedUpdateInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationUpdateavailabilityDaysInput | string[]
+  availableFrom?: Prisma.StringFieldUpdateOperationsInput | string
+  availableTo?: Prisma.StringFieldUpdateOperationsInput | string
   certificationDocumentUrl?: Prisma.StringFieldUpdateOperationsInput | string
   paymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -468,6 +532,10 @@ export type ConsultantApplicationCreateManyInput = {
   phone: string
   address: string
   age: number
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationCreateavailabilityDaysInput | string[]
+  availableFrom?: string
+  availableTo?: string
   certificationDocumentUrl: string
   paymentIntentId: string
   reviewNote?: string | null
@@ -485,6 +553,10 @@ export type ConsultantApplicationUpdateManyMutationInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationUpdateavailabilityDaysInput | string[]
+  availableFrom?: Prisma.StringFieldUpdateOperationsInput | string
+  availableTo?: Prisma.StringFieldUpdateOperationsInput | string
   certificationDocumentUrl?: Prisma.StringFieldUpdateOperationsInput | string
   paymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -502,6 +574,10 @@ export type ConsultantApplicationUncheckedUpdateManyInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationUpdateavailabilityDaysInput | string[]
+  availableFrom?: Prisma.StringFieldUpdateOperationsInput | string
+  availableTo?: Prisma.StringFieldUpdateOperationsInput | string
   certificationDocumentUrl?: Prisma.StringFieldUpdateOperationsInput | string
   paymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -521,6 +597,14 @@ export type ConsultantApplicationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type ConsultantApplicationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -530,6 +614,10 @@ export type ConsultantApplicationCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   age?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrder
+  availabilityDays?: Prisma.SortOrder
+  availableFrom?: Prisma.SortOrder
+  availableTo?: Prisma.SortOrder
   certificationDocumentUrl?: Prisma.SortOrder
   paymentIntentId?: Prisma.SortOrder
   reviewNote?: Prisma.SortOrder
@@ -541,6 +629,7 @@ export type ConsultantApplicationCountOrderByAggregateInput = {
 
 export type ConsultantApplicationAvgOrderByAggregateInput = {
   age?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrder
 }
 
 export type ConsultantApplicationMaxOrderByAggregateInput = {
@@ -552,6 +641,9 @@ export type ConsultantApplicationMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   age?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrder
+  availableFrom?: Prisma.SortOrder
+  availableTo?: Prisma.SortOrder
   certificationDocumentUrl?: Prisma.SortOrder
   paymentIntentId?: Prisma.SortOrder
   reviewNote?: Prisma.SortOrder
@@ -570,6 +662,9 @@ export type ConsultantApplicationMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   address?: Prisma.SortOrder
   age?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrder
+  availableFrom?: Prisma.SortOrder
+  availableTo?: Prisma.SortOrder
   certificationDocumentUrl?: Prisma.SortOrder
   paymentIntentId?: Prisma.SortOrder
   reviewNote?: Prisma.SortOrder
@@ -581,6 +676,7 @@ export type ConsultantApplicationMinOrderByAggregateInput = {
 
 export type ConsultantApplicationSumOrderByAggregateInput = {
   age?: Prisma.SortOrder
+  hourlyRate?: Prisma.SortOrder
 }
 
 export type ConsultantApplicationCreateNestedManyWithoutUserInput = {
@@ -667,8 +763,17 @@ export type ConsultantApplicationUncheckedUpdateManyWithoutReviewedByNestedInput
   deleteMany?: Prisma.ConsultantApplicationScalarWhereInput | Prisma.ConsultantApplicationScalarWhereInput[]
 }
 
+export type ConsultantApplicationCreateavailabilityDaysInput = {
+  set: string[]
+}
+
 export type EnumApplicationStatusFieldUpdateOperationsInput = {
   set?: $Enums.ApplicationStatus
+}
+
+export type ConsultantApplicationUpdateavailabilityDaysInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type ConsultantApplicationCreateWithoutUserInput = {
@@ -679,6 +784,10 @@ export type ConsultantApplicationCreateWithoutUserInput = {
   phone: string
   address: string
   age: number
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationCreateavailabilityDaysInput | string[]
+  availableFrom?: string
+  availableTo?: string
   certificationDocumentUrl: string
   paymentIntentId: string
   reviewNote?: string | null
@@ -696,6 +805,10 @@ export type ConsultantApplicationUncheckedCreateWithoutUserInput = {
   phone: string
   address: string
   age: number
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationCreateavailabilityDaysInput | string[]
+  availableFrom?: string
+  availableTo?: string
   certificationDocumentUrl: string
   paymentIntentId: string
   reviewNote?: string | null
@@ -723,6 +836,10 @@ export type ConsultantApplicationCreateWithoutReviewedByInput = {
   phone: string
   address: string
   age: number
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationCreateavailabilityDaysInput | string[]
+  availableFrom?: string
+  availableTo?: string
   certificationDocumentUrl: string
   paymentIntentId: string
   reviewNote?: string | null
@@ -741,6 +858,10 @@ export type ConsultantApplicationUncheckedCreateWithoutReviewedByInput = {
   phone: string
   address: string
   age: number
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationCreateavailabilityDaysInput | string[]
+  availableFrom?: string
+  availableTo?: string
   certificationDocumentUrl: string
   paymentIntentId: string
   reviewNote?: string | null
@@ -787,6 +908,10 @@ export type ConsultantApplicationScalarWhereInput = {
   phone?: Prisma.StringFilter<"ConsultantApplication"> | string
   address?: Prisma.StringFilter<"ConsultantApplication"> | string
   age?: Prisma.IntFilter<"ConsultantApplication"> | number
+  hourlyRate?: Prisma.DecimalNullableFilter<"ConsultantApplication"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.StringNullableListFilter<"ConsultantApplication">
+  availableFrom?: Prisma.StringFilter<"ConsultantApplication"> | string
+  availableTo?: Prisma.StringFilter<"ConsultantApplication"> | string
   certificationDocumentUrl?: Prisma.StringFilter<"ConsultantApplication"> | string
   paymentIntentId?: Prisma.StringFilter<"ConsultantApplication"> | string
   reviewNote?: Prisma.StringNullableFilter<"ConsultantApplication"> | string | null
@@ -820,6 +945,10 @@ export type ConsultantApplicationCreateManyUserInput = {
   phone: string
   address: string
   age: number
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationCreateavailabilityDaysInput | string[]
+  availableFrom?: string
+  availableTo?: string
   certificationDocumentUrl: string
   paymentIntentId: string
   reviewNote?: string | null
@@ -838,6 +967,10 @@ export type ConsultantApplicationCreateManyReviewedByInput = {
   phone: string
   address: string
   age: number
+  hourlyRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationCreateavailabilityDaysInput | string[]
+  availableFrom?: string
+  availableTo?: string
   certificationDocumentUrl: string
   paymentIntentId: string
   reviewNote?: string | null
@@ -854,6 +987,10 @@ export type ConsultantApplicationUpdateWithoutUserInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationUpdateavailabilityDaysInput | string[]
+  availableFrom?: Prisma.StringFieldUpdateOperationsInput | string
+  availableTo?: Prisma.StringFieldUpdateOperationsInput | string
   certificationDocumentUrl?: Prisma.StringFieldUpdateOperationsInput | string
   paymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -871,6 +1008,10 @@ export type ConsultantApplicationUncheckedUpdateWithoutUserInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationUpdateavailabilityDaysInput | string[]
+  availableFrom?: Prisma.StringFieldUpdateOperationsInput | string
+  availableTo?: Prisma.StringFieldUpdateOperationsInput | string
   certificationDocumentUrl?: Prisma.StringFieldUpdateOperationsInput | string
   paymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -888,6 +1029,10 @@ export type ConsultantApplicationUncheckedUpdateManyWithoutUserInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationUpdateavailabilityDaysInput | string[]
+  availableFrom?: Prisma.StringFieldUpdateOperationsInput | string
+  availableTo?: Prisma.StringFieldUpdateOperationsInput | string
   certificationDocumentUrl?: Prisma.StringFieldUpdateOperationsInput | string
   paymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -905,6 +1050,10 @@ export type ConsultantApplicationUpdateWithoutReviewedByInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationUpdateavailabilityDaysInput | string[]
+  availableFrom?: Prisma.StringFieldUpdateOperationsInput | string
+  availableTo?: Prisma.StringFieldUpdateOperationsInput | string
   certificationDocumentUrl?: Prisma.StringFieldUpdateOperationsInput | string
   paymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -923,6 +1072,10 @@ export type ConsultantApplicationUncheckedUpdateWithoutReviewedByInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationUpdateavailabilityDaysInput | string[]
+  availableFrom?: Prisma.StringFieldUpdateOperationsInput | string
+  availableTo?: Prisma.StringFieldUpdateOperationsInput | string
   certificationDocumentUrl?: Prisma.StringFieldUpdateOperationsInput | string
   paymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -940,6 +1093,10 @@ export type ConsultantApplicationUncheckedUpdateManyWithoutReviewedByInput = {
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.StringFieldUpdateOperationsInput | string
   age?: Prisma.IntFieldUpdateOperationsInput | number
+  hourlyRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  availabilityDays?: Prisma.ConsultantApplicationUpdateavailabilityDaysInput | string[]
+  availableFrom?: Prisma.StringFieldUpdateOperationsInput | string
+  availableTo?: Prisma.StringFieldUpdateOperationsInput | string
   certificationDocumentUrl?: Prisma.StringFieldUpdateOperationsInput | string
   paymentIntentId?: Prisma.StringFieldUpdateOperationsInput | string
   reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -959,6 +1116,10 @@ export type ConsultantApplicationSelect<ExtArgs extends runtime.Types.Extensions
   phone?: boolean
   address?: boolean
   age?: boolean
+  hourlyRate?: boolean
+  availabilityDays?: boolean
+  availableFrom?: boolean
+  availableTo?: boolean
   certificationDocumentUrl?: boolean
   paymentIntentId?: boolean
   reviewNote?: boolean
@@ -979,6 +1140,10 @@ export type ConsultantApplicationSelectCreateManyAndReturn<ExtArgs extends runti
   phone?: boolean
   address?: boolean
   age?: boolean
+  hourlyRate?: boolean
+  availabilityDays?: boolean
+  availableFrom?: boolean
+  availableTo?: boolean
   certificationDocumentUrl?: boolean
   paymentIntentId?: boolean
   reviewNote?: boolean
@@ -999,6 +1164,10 @@ export type ConsultantApplicationSelectUpdateManyAndReturn<ExtArgs extends runti
   phone?: boolean
   address?: boolean
   age?: boolean
+  hourlyRate?: boolean
+  availabilityDays?: boolean
+  availableFrom?: boolean
+  availableTo?: boolean
   certificationDocumentUrl?: boolean
   paymentIntentId?: boolean
   reviewNote?: boolean
@@ -1019,6 +1188,10 @@ export type ConsultantApplicationSelectScalar = {
   phone?: boolean
   address?: boolean
   age?: boolean
+  hourlyRate?: boolean
+  availabilityDays?: boolean
+  availableFrom?: boolean
+  availableTo?: boolean
   certificationDocumentUrl?: boolean
   paymentIntentId?: boolean
   reviewNote?: boolean
@@ -1028,7 +1201,7 @@ export type ConsultantApplicationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ConsultantApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "status" | "fullName" | "email" | "phone" | "address" | "age" | "certificationDocumentUrl" | "paymentIntentId" | "reviewNote" | "reviewedAt" | "reviewedById" | "createdAt" | "updatedAt", ExtArgs["result"]["consultantApplication"]>
+export type ConsultantApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "status" | "fullName" | "email" | "phone" | "address" | "age" | "hourlyRate" | "availabilityDays" | "availableFrom" | "availableTo" | "certificationDocumentUrl" | "paymentIntentId" | "reviewNote" | "reviewedAt" | "reviewedById" | "createdAt" | "updatedAt", ExtArgs["result"]["consultantApplication"]>
 export type ConsultantApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.ConsultantApplication$reviewedByArgs<ExtArgs>
@@ -1057,6 +1230,10 @@ export type $ConsultantApplicationPayload<ExtArgs extends runtime.Types.Extensio
     phone: string
     address: string
     age: number
+    hourlyRate: runtime.Decimal | null
+    availabilityDays: string[]
+    availableFrom: string
+    availableTo: string
     certificationDocumentUrl: string
     paymentIntentId: string
     reviewNote: string | null
@@ -1497,6 +1674,10 @@ export interface ConsultantApplicationFieldRefs {
   readonly phone: Prisma.FieldRef<"ConsultantApplication", 'String'>
   readonly address: Prisma.FieldRef<"ConsultantApplication", 'String'>
   readonly age: Prisma.FieldRef<"ConsultantApplication", 'Int'>
+  readonly hourlyRate: Prisma.FieldRef<"ConsultantApplication", 'Decimal'>
+  readonly availabilityDays: Prisma.FieldRef<"ConsultantApplication", 'String[]'>
+  readonly availableFrom: Prisma.FieldRef<"ConsultantApplication", 'String'>
+  readonly availableTo: Prisma.FieldRef<"ConsultantApplication", 'String'>
   readonly certificationDocumentUrl: Prisma.FieldRef<"ConsultantApplication", 'String'>
   readonly paymentIntentId: Prisma.FieldRef<"ConsultantApplication", 'String'>
   readonly reviewNote: Prisma.FieldRef<"ConsultantApplication", 'String'>

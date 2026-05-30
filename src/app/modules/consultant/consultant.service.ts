@@ -133,6 +133,8 @@ const getAllConsultants = async (
                         id: true,
                         name: true,
                         email: true,
+                        image: true,
+                        age: true,
                         nickname: {
                             select: {
                                 handle: true,
@@ -158,6 +160,8 @@ const getConsultantById = async (id: string): Promise<IConsultantWithUser | null
                     id: true,
                     name: true,
                     email: true,
+                    image: true,
+                    age: true,
                     nickname: {
                         select: {
                             handle: true,

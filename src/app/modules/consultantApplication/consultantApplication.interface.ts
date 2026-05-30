@@ -6,6 +6,10 @@ export interface IConsultantApplicationCreate {
     phone: string;
     address: string;
     age: number;
+    hourlyRate?: number;
+    availabilityDays: string[];
+    availableFrom: string;
+    availableTo: string;
     paymentIntentId: string;
 }
 

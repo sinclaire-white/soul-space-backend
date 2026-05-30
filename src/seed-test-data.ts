@@ -147,6 +147,7 @@ async function main() {
     professionalTitle: "Licensed Clinical Psychologist",
     licenseNumber: "LIC-2024-001",
     bio: "Specializing in anxiety, depression, and trauma therapy with 10+ years of experience.",
+    address: "456 Therapy Plaza, New York, NY 10001",
     hourlyRate: 120.0,
     yearsExperience: 12,
     specializations: ["Anxiety", "Depression", "PTSD", "CBT"],
@@ -160,6 +161,7 @@ async function main() {
     professionalTitle: "Marriage & Family Therapist",
     licenseNumber: "LIC-2024-002",
     bio: "Helping couples and families build healthier relationships through evidence-based therapy.",
+    address: "789 Healing Center, Los Angeles, CA 90001",
     hourlyRate: 95.0,
     yearsExperience: 7,
     specializations: ["Couples Therapy", "Family Therapy", "Grief", "Communication"],
@@ -444,7 +446,33 @@ async function main() {
   /* ── 13. Consultant Applications ── */
   async function ensureApplication(userId: string, appStatus: ApplicationStatus) {
     const existing = await prisma.consultantApplication.findFirst({ where: { userId } });
-    if (existing) return existing;
+    const defaultDocumentUrl = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+
+    if (existing) {
+      const needsFix =
+        existing.certificationDocumentUrl === "https://res.cloudinary.com/du4swryta/image/upload/v1/sample_cert.pdf" ||
+        !existing.certificationDocumentUrl ||
+        !existing.availabilityDays?.length ||
+        !existing.hourlyRate;
+
+      if (needsFix) {
+        const updated = await prisma.consultantApplication.update({
+          where: { id: existing.id },
+          data: {
+            availabilityDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            availableFrom: existing.availableFrom || "10:00",
+            availableTo: existing.availableTo || "22:00",
+            certificationDocumentUrl: defaultDocumentUrl,
+            hourlyRate: existing.hourlyRate || 100,
+          },
+        });
+        log(`Updated existing consultant application for userId: ${userId}`);
+        return updated;
+      }
+
+      return existing;
+    }
+
     const app = await prisma.consultantApplication.create({
       data: {
         userId,
@@ -454,7 +482,11 @@ async function main() {
         phone: "+1-555-000-1234",
         address: "123 Wellness Ave, Portland, OR 97201",
         age: 35,
-        certificationDocumentUrl: "https://res.cloudinary.com/du4swryta/image/upload/v1/sample_cert.pdf",
+        hourlyRate: 100,
+        availabilityDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        availableFrom: "10:00",
+        availableTo: "22:00",
+        certificationDocumentUrl: defaultDocumentUrl,
         paymentIntentId: `pi_seed_${userId}_${Date.now()}`,
         reviewNote: appStatus === ApplicationStatus.REJECTED ? "Insufficient credentials provided." : null,
         reviewedAt: appStatus !== ApplicationStatus.PENDING ? new Date() : null,

@@ -48,6 +48,8 @@ export interface IConsultantWithUser extends IConsultant {
         id: string;
         name?: string | null;
         email: string;
+        image?: string | null;
+        age?: number | null;
         nickname?: {
             handle: string;
             avatarUrl?: string | null;

@@ -7,6 +7,10 @@ model ConsultantApplication {
   phone                   String            @db.VarChar(30)
   address                 String            @db.VarChar(500)
   age                     Int
+  hourlyRate              Decimal?          @db.Decimal(10, 2)
+  availabilityDays        String[]          @default([])
+  availableFrom           String            @db.VarChar(5) @default("10:00")
+  availableTo             String            @db.VarChar(5) @default("22:00")
   certificationDocumentUrl String           @db.Text
   paymentIntentId         String            @unique @db.VarChar(255)
   reviewNote              String?           @db.Text

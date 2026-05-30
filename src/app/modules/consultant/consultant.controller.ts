@@ -18,7 +18,17 @@ const createConsultant = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllConsultants = catchAsync(async (req: Request, res: Response) => {
-    const filters: IConsultantFilters = req.query;
+    const filters: IConsultantFilters = {
+        specialization: req.query.specialization as string | undefined,
+        isAvailable:
+            req.query.isAvailable === "true"
+                ? true
+                : req.query.isAvailable === "false"
+                ? false
+                : undefined,
+        minRating: req.query.minRating ? Number(req.query.minRating) : undefined,
+        maxPrice: req.query.maxPrice ? Number(req.query.maxPrice) : undefined,
+    };
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const result = await ConsultantService.getAllConsultants(filters, page, limit);

@@ -34,7 +34,6 @@ const createBooking = async (
     clientId: string,
     payload: IBookingCreate
 ): Promise<IBooking> => {
-    // Check if consultant exists and is verified
     const consultant = await prisma.consultant.findFirst({
         where: {
             id: payload.consultantId,
@@ -47,7 +46,6 @@ const createBooking = async (
         throw new AppError(status.NOT_FOUND, "Consultant not found or not available");
     }
 
-    // Check if user is trying to book themselves
     if (consultant.userId === clientId) {
         throw new AppError(status.BAD_REQUEST, "You cannot book yourself");
     }
@@ -55,7 +53,43 @@ const createBooking = async (
     const scheduledAt = new Date(payload.scheduledAt);
     const now = new Date();
 
-    // Check minimum advance notice (24 hours)
+    const availabilities = await prisma.consultantAvailability.findMany({
+        where: {
+            consultantId: payload.consultantId,
+            isBlocked: false,
+        },
+        select: { dayOfWeek: true },
+    });
+
+    const duration = payload.durationMinutes || 60;
+    if (duration < 30) {
+        throw new AppError(status.BAD_REQUEST, "Minimum session duration is 30 minutes");
+    }
+    if (duration > 480) {
+        throw new AppError(status.BAD_REQUEST, "Maximum session duration is 8 hours");
+    }
+
+    const requestedDay = scheduledAt.getUTCDay();
+    const isAvailableDay = availabilities.some((a) => a.dayOfWeek === requestedDay);
+
+    if (!isAvailableDay) {
+        throw new AppError(status.BAD_REQUEST, "Consultant is not available on this day of the week");
+    }
+
+    if (scheduledAt.getUTCMinutes() !== 0) {
+        throw new AppError(status.BAD_REQUEST, "Sessions must start on the hour (e.g. 10:00, 11:00)");
+    }
+
+    const requestedMinutes = scheduledAt.getUTCHours() * 60 + scheduledAt.getUTCMinutes();
+    const sessionEndMinutes = requestedMinutes + duration;
+
+    if (requestedMinutes < 600 || sessionEndMinutes > 1320) {
+        throw new AppError(
+            status.BAD_REQUEST,
+            "Selected time is outside the consultant's availability window (10:00 - 22:00 UTC)"
+        );
+    }
+
     const hoursUntilSession = (scheduledAt.getTime() - now.getTime()) / (1000 * 60 * 60);
     if (hoursUntilSession < MIN_ADVANCE_HOURS) {
         throw new AppError(
@@ -64,7 +98,6 @@ const createBooking = async (
         );
     }
 
-    // Check maximum advance booking (4 weeks)
     const daysUntilSession = hoursUntilSession / 24;
     if (daysUntilSession > MAX_ADVANCE_DAYS) {
         throw new AppError(
@@ -73,23 +106,40 @@ const createBooking = async (
         );
     }
 
-    // Check for scheduling conflicts
-    const conflictingBooking = await prisma.booking.findFirst({
+    const sessionStart = scheduledAt.getTime();
+    const sessionEnd = sessionStart + duration * 60000;
+
+    const dayStart = new Date(Date.UTC(
+        scheduledAt.getUTCFullYear(),
+        scheduledAt.getUTCMonth(),
+        scheduledAt.getUTCDate(),
+        0, 0, 0
+    ));
+    const dayAfter = new Date(Date.UTC(
+        scheduledAt.getUTCFullYear(),
+        scheduledAt.getUTCMonth(),
+        scheduledAt.getUTCDate() + 1,
+        0, 0, 0
+    ));
+
+    const bookingsOnDay = await prisma.booking.findMany({
         where: {
             consultantId: payload.consultantId,
             status: { notIn: [BookingStatus.CANCELLED, BookingStatus.NO_SHOW] },
             scheduledAt: {
-                lte: new Date(scheduledAt.getTime() + (payload.durationMinutes || 60) * 60000),
-            },
-            AND: {
-                scheduledAt: {
-                    gte: new Date(scheduledAt.getTime() - (payload.durationMinutes || 60) * 60000),
-                },
+                gte: dayStart,
+                lt: dayAfter,
             },
         },
     });
 
-    if (conflictingBooking) {
+    const hasConflict = bookingsOnDay.some((booking) => {
+        const bookingStart = new Date(booking.scheduledAt).getTime();
+        const bookingEnd = bookingStart + booking.durationMinutes * 60000;
+        return sessionStart < bookingEnd && sessionEnd > bookingStart;
+    });
+
+    if (hasConflict) {
         throw new AppError(status.CONFLICT, "This time slot is already booked");
     }
 
@@ -98,7 +148,7 @@ const createBooking = async (
             clientId,
             consultantId: payload.consultantId,
             scheduledAt,
-            durationMinutes: payload.durationMinutes || 60,
+            durationMinutes: duration,
             preSessionNotes: payload.preSessionNotes,
             pricePaid: consultant.hourlyRate.toNumber(),
             paymentStatus: PaymentStatus.PENDING,
@@ -263,7 +313,6 @@ const updateBooking = async (
         throw new AppError(status.NOT_FOUND, "Booking not found or you don't have permission");
     }
 
-    // Only allow updates if booking is not completed or cancelled
     if (booking.status === BookingStatus.COMPLETED || booking.status === BookingStatus.CANCELLED) {
         throw new AppError(status.BAD_REQUEST, "Cannot update completed or cancelled bookings");
     }
@@ -292,7 +341,6 @@ const cancelBooking = async (id: string, userId: string): Promise<IBooking | nul
         throw new AppError(status.BAD_REQUEST, "Booking is already completed or cancelled");
     }
 
-    // Check cancellation policy (>24h = full refund, <24h = 50% refund)
     const now = new Date();
     const scheduledAt = new Date(booking.scheduledAt);
     const hoursUntilSession = (scheduledAt.getTime() - now.getTime()) / (1000 * 60 * 60);
@@ -365,11 +413,37 @@ const completeBooking = async (
         },
     });
 
-    // Update consultant total sessions
     await prisma.consultant.update({
         where: { id: booking.consultantId },
         data: {
             totalSessions: { increment: 1 },
+        },
+    });
+
+    return mapBooking(updatedBooking);
+};
+
+const declineBooking = async (id: string, consultantUserId: string): Promise<IBooking | null> => {
+    const booking = await prisma.booking.findFirst({
+        where: {
+            id,
+            consultant: { userId: consultantUserId },
+        },
+    });
+
+    if (!booking) {
+        throw new AppError(status.NOT_FOUND, "Booking not found");
+    }
+
+    if (booking.status !== BookingStatus.PENDING) {
+        throw new AppError(status.BAD_REQUEST, "Only pending bookings can be declined");
+    }
+
+    const updatedBooking = await prisma.booking.update({
+        where: { id },
+        data: {
+            status: BookingStatus.CANCELLED,
+            paymentStatus: PaymentStatus.REFUNDED,
         },
     });
 
@@ -385,4 +459,5 @@ export const BookingService = {
     cancelBooking,
     confirmBooking,
     completeBooking,
+    declineBooking,
 };

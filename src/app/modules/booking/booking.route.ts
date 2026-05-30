@@ -40,5 +40,6 @@ router.patch(
     checkAuth(UserRole.CONSULTANT),
     BookingController.completeBooking
 );
+router.patch("/:id/decline", checkAuth(UserRole.CONSULTANT), BookingController.declineBooking);
 
 export const BookingRoutes = router;

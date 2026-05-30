@@ -98,6 +98,8 @@ const getCommentsByPostId = async (
                 author: {
                     select: {
                         id: true,
+                        name: true,
+                        image: true,
                         nickname: {
                             select: {
                                 handle: true,
@@ -116,6 +118,8 @@ const getCommentsByPostId = async (
                         author: {
                             select: {
                                 id: true,
+                                name: true,
+                                image: true,
                                 nickname: {
                                     select: {
                                         handle: true,
@@ -134,6 +138,8 @@ const getCommentsByPostId = async (
                                 author: {
                                     select: {
                                         id: true,
+                                        name: true,
+                                        image: true,
                                         nickname: {
                                             select: {
                                                 handle: true,
@@ -170,6 +176,8 @@ const getCommentById = async (id: string): Promise<ICommentWithAuthor | null> =>
             author: {
                 select: {
                     id: true,
+                    name: true,
+                    image: true,
                     nickname: {
                         select: {
                             handle: true,

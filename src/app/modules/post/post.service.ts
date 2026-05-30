@@ -54,6 +54,8 @@ const getAllPosts = async (
                 author: {
                     select: {
                         id: true,
+                        name: true,
+                        image: true,
                         nickname: {
                             select: {
                                 handle: true,
@@ -92,6 +94,8 @@ const getPostById = async (id: string): Promise<IPostWithAuthor | null> => {
             author: {
                 select: {
                     id: true,
+                    name: true,
+                    image: true,
                     nickname: {
                         select: {
                             handle: true,

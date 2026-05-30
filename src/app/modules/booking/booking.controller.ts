@@ -152,6 +152,19 @@ const completeBooking = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const declineBooking = catchAsync(async (req: Request, res: Response) => {
+    const id = req.params.id as string;
+    const consultantUserId = (req as any).user?.userId;
+    const result = await BookingService.declineBooking(id, consultantUserId);
+
+    sendResponse(res, {
+        httpStatusCode: status.OK,
+        success: true,
+        message: "Booking declined successfully",
+        data: result,
+    });
+});
+
 export const BookingController = {
     createBooking,
     getMyBookings,
@@ -161,4 +174,5 @@ export const BookingController = {
     cancelBooking,
     confirmBooking,
     completeBooking,
+    declineBooking,
 };
