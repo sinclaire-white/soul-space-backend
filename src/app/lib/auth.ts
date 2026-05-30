@@ -17,6 +17,21 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
         requireEmailVerification: true,
+        // THIS handles the built-in email verification (link-based)
+        sendVerificationEmail: async ({ user, url }) => {
+            console.log("🔥 sendVerificationEmail called for:", user.email);
+            console.log("🔥 verification URL:", url);
+            
+            await sendEmail({
+                to: user.email,
+                subject: "Verify your email",
+                templateName: "otp",
+                templateData: {
+                    name: user.name || "Soul Space User",
+                    otp: url, // Pass the URL as OTP for now, or create a new template
+                }
+            });
+        },
     },
 
     socialProviders: {},
@@ -57,6 +72,8 @@ export const auth = betterAuth({
         emailOTP({
             overrideDefaultEmailVerification: true,
             async sendVerificationOTP({ email, otp, type }) {
+                console.log(`🔥 sendVerificationOTP called: type=${type}, email=${email}`);
+                
                 if (envVars.NODE_ENV !== "production") {
                     console.log(`DEV OTP (${type}) for ${email}: ${otp}`);
                 }
@@ -74,7 +91,7 @@ export const auth = betterAuth({
                 } else if (type === "forget-password") {
                     const user = await prisma.user.findUnique({
                         where: { email }
-                    })
+                    });
 
                     if (user) {
                         await sendEmail({
@@ -85,21 +102,21 @@ export const auth = betterAuth({
                                 name: "Soul Space User",
                                 otp,
                             }
-                        })
+                        });
                     }
                 }
             },
-            expiresIn: 5 * 60, // 5 minutes in seconds
+            expiresIn: 5 * 60,
             otpLength: 6,
         })
     ],
 
     session: {
-        expiresIn: 60 * 60 * 24, // 1 day in seconds
-        updateAge: 60 * 60 * 24, // 1 day in seconds
+        expiresIn: 60 * 60 * 24,
+        updateAge: 60 * 60 * 24,
         cookieCache: {
             enabled: true,
-            maxAge: 60 * 60 * 24, // 1 day in seconds
+            maxAge: 60 * 60 * 24,
         }
     },
 
