@@ -34,11 +34,15 @@ interface EnvConfig {
   CLOUDINARY_API_SECRET?: string;
   
   // SMTP
-  SMTP_HOST?: string;
-  SMTP_PORT?: number;
-  SMTP_USER?: string;
-  SMTP_PASS?: string;
-  SMTP_FROM?: string;
+  // SMTP_HOST?: string;
+  // SMTP_PORT?: number;
+  // SMTP_USER?: string;
+  // SMTP_PASS?: string;
+  // SMTP_FROM?: string;
+
+  // Resend Email
+  RESEND_API_KEY?: string;
+  EMAIL_FROM?: string;
 }
 
 const getEnvVariable = (
@@ -100,9 +104,13 @@ export const envVars: EnvConfig = {
   CLOUDINARY_API_SECRET: getOptionalEnvVariable("CLOUDINARY_API_SECRET"),
   
   // SMTP
-  SMTP_HOST: getOptionalEnvVariable("SMTP_HOST"),
-  SMTP_PORT: getOptionalNumberEnvVariable("SMTP_PORT"),
-  SMTP_USER: getOptionalEnvVariable("SMTP_USER"),
-  SMTP_PASS: getOptionalEnvVariable("SMTP_PASS"),
-  SMTP_FROM: getOptionalEnvVariable("SMTP_FROM"),
+  // SMTP_HOST: getOptionalEnvVariable("SMTP_HOST"),
+  // SMTP_PORT: getOptionalNumberEnvVariable("SMTP_PORT"),
+  // SMTP_USER: getOptionalEnvVariable("SMTP_USER"),
+  // SMTP_PASS: getOptionalEnvVariable("SMTP_PASS"),
+  // SMTP_FROM: getOptionalEnvVariable("SMTP_FROM"),
+
+  // Resend Email
+  RESEND_API_KEY: getOptionalEnvVariable("RESEND_API_KEY"),
+  EMAIL_FROM: getOptionalEnvVariable("EMAIL_FROM"),
 };

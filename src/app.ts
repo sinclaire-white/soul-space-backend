@@ -1,17 +1,7 @@
-import dotenv from "dotenv";
-dotenv.config();
-
-import express, { Express, Request, Response } from "express";
-
-const app: Express = express();
-
-// MUST be set before ANY middleware that reads req.ip
-app.set("trust proxy", 1);
-
-// NOW import everything else — limiters will pick up the trust proxy setting
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
+import express, { Express, Request, Response } from "express";
 import { envVars } from "./app/config/env";
 import { auth } from "./app/lib/auth";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
@@ -19,6 +9,11 @@ import { notFound } from "./app/middleware/notFound";
 import { securityMiddleware, sanitizeInput, sanitizeOutput } from "./app/middleware/security";
 import { apiLimiter } from "./app/middleware/rateLimiter";
 import { IndexRoutes } from "./app/routes";
+
+
+const app: Express = express();
+
+app.set("trust proxy", 1);
 
 // Security middleware (Helmet, etc.)
 app.use(securityMiddleware);
@@ -31,7 +26,8 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// API rate limiting
+// API rate limiting — only apply to /api/v1 so better-auth's own /api/auth
+// internal requests are not counted against the budget.
 app.use("/api/v1", apiLimiter);
 
 // Better Auth handler - MUST be before express.json()
