@@ -23,7 +23,7 @@ app.use(cors({
     origin: envVars.FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: ["Content-Type", "Authorization", "X-Session-Token", "x-session-token", "X-Requested-With"]
 }));
 
 // API rate limiting — only apply to /api/v1 so better-auth's own /api/auth
