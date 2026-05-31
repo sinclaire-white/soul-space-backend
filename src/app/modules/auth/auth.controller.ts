@@ -84,8 +84,7 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
 });
 
 const logoutUser = catchAsync(async (req: Request, res: Response) => {
-    const { sessionToken } = req.body;
-    const result = await AuthService.logoutUser(sessionToken);
+    const result = await AuthService.logoutUser(req);
     res.clearCookie('accessToken', {
         path: '/',
         sameSite: envVars.NODE_ENV === 'production' ? 'none' : 'lax',

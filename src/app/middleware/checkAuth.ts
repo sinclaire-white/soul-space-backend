@@ -10,7 +10,7 @@ import { getTokenFromRequest } from "../utils/getTokenFromRequest";
 
 export const checkAuth = (...authRoles: UserRole[]) => async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const sessionToken = getTokenFromRequest(req, "better-auth.session_token");
+        const sessionToken = getTokenFromRequest(req, "better-auth.session_token", "X-Session-Token");
 
         if (!sessionToken) {
             throw new AppError(status.UNAUTHORIZED, 'Unauthorized access! No session token provided.');

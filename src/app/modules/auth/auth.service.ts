@@ -8,6 +8,7 @@ import { jwtUtils } from "../../utils/jwt";
 import { tokenUtils } from "../../utils/token";
 import { getTokenFromRequest } from "../../utils/getTokenFromRequest";
 import { IAuthResponse, IChangePasswordPayload, ILoginUserPayload, IRegisterUserPayload } from "./auth.interface";
+
 const requireSessionToken = (sessionToken: string | null | undefined): string => {
     if (!sessionToken) {
         throw new AppError(status.INTERNAL_SERVER_ERROR, "Failed to create authentication session");
@@ -31,7 +32,6 @@ const registerUser = async (payload: IRegisterUserPayload): Promise<IAuthRespons
         throw new AppError(status.BAD_REQUEST, "Failed to register user");
     }
 
-    // Auto-verify since we disabled verification
     if (!data.user.emailVerified) {
         await prisma.user.update({
             where: { id: data.user.id },
@@ -79,13 +79,11 @@ const loginUser = async (payload: ILoginUserPayload): Promise<IAuthResponse> => 
         throw new AppError(status.FORBIDDEN, "User account is deactivated");
     }
 
-    // Update last login
     await prisma.user.update({
         where: { id: data.user.id },
         data: { lastLoginAt: new Date() },
     });
 
-    // Create nickname if not yet created
     const existingNickname = await prisma.nickname.findUnique({ where: { userId: data.user.id } });
     if (!existingNickname) {
         const handle = `user_${Math.random().toString(36).substring(2, 8)}`;
@@ -170,7 +168,6 @@ const getNewToken = async (refreshToken: string, sessionToken: string): Promise<
         email: session.user.email,
     });
 
-    // Update session expiry
     await prisma.session.update({
         where: { token: sessionToken },
         data: {
@@ -246,7 +243,7 @@ const changePassword = async (
 };
 
 const logoutUser = async (req: Request) => {
-    const sessionToken = getTokenFromRequest(req, "better-auth.session_token");
+    const sessionToken = getTokenFromRequest(req, "better-auth.session_token", "X-Session-Token");
 
     if (!sessionToken) {
         throw new AppError(status.UNAUTHORIZED, "No session token provided");
