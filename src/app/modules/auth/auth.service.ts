@@ -1,3 +1,4 @@
+import { Request } from "express";
 import status from "http-status";
 import { UserRole } from "../../../../prisma/generated/prisma/enums";
 import AppError from "../../errorHelpers/AppError";
@@ -5,8 +6,8 @@ import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
 import { jwtUtils } from "../../utils/jwt";
 import { tokenUtils } from "../../utils/token";
+import { getTokenFromRequest } from "../../utils/getTokenFromRequest";
 import { IAuthResponse, IChangePasswordPayload, ILoginUserPayload, IRegisterUserPayload } from "./auth.interface";
-
 const requireSessionToken = (sessionToken: string | null | undefined): string => {
     if (!sessionToken) {
         throw new AppError(status.INTERNAL_SERVER_ERROR, "Failed to create authentication session");
@@ -244,7 +245,13 @@ const changePassword = async (
     };
 };
 
-const logoutUser = async (sessionToken: string) => {
+const logoutUser = async (req: Request) => {
+    const sessionToken = getTokenFromRequest(req, "better-auth.session_token");
+
+    if (!sessionToken) {
+        throw new AppError(status.UNAUTHORIZED, "No session token provided");
+    }
+
     await auth.api.signOut({
         headers: new Headers({
             Authorization: `Bearer ${sessionToken}`,

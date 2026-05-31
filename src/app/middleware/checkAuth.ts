@@ -5,13 +5,12 @@ import { UserRole } from "../../../prisma/generated/prisma/enums";
 import { envVars } from "../config/env";
 import AppError from "../errorHelpers/AppError";
 import { prisma } from "../lib/prisma";
-import { CookieUtils } from "../utils/cookie";
 import { jwtUtils } from "../utils/jwt";
+import { getTokenFromRequest } from "../utils/getTokenFromRequest";
 
 export const checkAuth = (...authRoles: UserRole[]) => async (req: Request, res: Response, next: NextFunction) => {
     try {
-        // Session Token Verification
-        const sessionToken = CookieUtils.getCookie(req, "better-auth.session_token");
+        const sessionToken = getTokenFromRequest(req, "better-auth.session_token");
 
         if (!sessionToken) {
             throw new AppError(status.UNAUTHORIZED, 'Unauthorized access! No session token provided.');
@@ -35,20 +34,6 @@ export const checkAuth = (...authRoles: UserRole[]) => async (req: Request, res:
 
         const user = sessionExists.user;
 
-        const now = new Date();
-        const expiresAt = new Date(sessionExists.expiresAt);
-        const createdAt = new Date(sessionExists.createdAt);
-
-        const sessionLifeTime = expiresAt.getTime() - createdAt.getTime();
-        const timeRemaining = expiresAt.getTime() - now.getTime();
-        const percentRemaining = (timeRemaining / sessionLifeTime) * 100;
-
-        if (percentRemaining < 20) {
-            res.setHeader('X-Session-Refresh', 'true');
-            res.setHeader('X-Session-Expires-At', expiresAt.toISOString());
-            res.setHeader('X-Time-Remaining', timeRemaining.toString());
-        }
-
         if (!user.isActive) {
             throw new AppError(status.UNAUTHORIZED, 'Unauthorized access! User is not active.');
         }
@@ -63,7 +48,6 @@ export const checkAuth = (...authRoles: UserRole[]) => async (req: Request, res:
             email: user.email,
         };
 
-        // Look up the user's nicknameId for use in post creation etc.
         const userNickname = await prisma.nickname.findUnique({
             where: { userId: user.id },
             select: { id: true },
@@ -72,8 +56,7 @@ export const checkAuth = (...authRoles: UserRole[]) => async (req: Request, res:
             (req as any).user.nicknameId = userNickname.id;
         }
 
-        // Access Token Verification
-        const accessToken = CookieUtils.getCookie(req, 'accessToken');
+        const accessToken = getTokenFromRequest(req, "accessToken");
 
         if (!accessToken) {
             throw new AppError(status.UNAUTHORIZED, 'Unauthorized access! No access token provided.');
