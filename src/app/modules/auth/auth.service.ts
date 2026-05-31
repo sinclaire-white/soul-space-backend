@@ -1,6 +1,5 @@
 import status from "http-status";
 import { UserRole } from "../../../../prisma/generated/prisma/enums";
-import { envVars } from "../../config/env";
 import AppError from "../../errorHelpers/AppError";
 import { auth } from "../../lib/auth";
 import { prisma } from "../../lib/prisma";
@@ -12,7 +11,6 @@ const requireSessionToken = (sessionToken: string | null | undefined): string =>
     if (!sessionToken) {
         throw new AppError(status.INTERNAL_SERVER_ERROR, "Failed to create authentication session");
     }
-
     return sessionToken;
 };
 
@@ -30,6 +28,14 @@ const registerUser = async (payload: IRegisterUserPayload): Promise<IAuthRespons
 
     if (!data.user) {
         throw new AppError(status.BAD_REQUEST, "Failed to register user");
+    }
+
+    // Auto-verify since we disabled verification
+    if (!data.user.emailVerified) {
+        await prisma.user.update({
+            where: { id: data.user.id },
+            data: { emailVerified: true },
+        });
     }
 
     const accessToken = tokenUtils.getAccessToken({
@@ -50,7 +56,7 @@ const registerUser = async (payload: IRegisterUserPayload): Promise<IAuthRespons
             email: data.user.email,
             name: data.user.name,
             role: data.user.role,
-            emailVerified: data.user.emailVerified,
+            emailVerified: true,
         },
         token: accessToken,
         refreshToken,
@@ -78,7 +84,7 @@ const loginUser = async (payload: ILoginUserPayload): Promise<IAuthResponse> => 
         data: { lastLoginAt: new Date() },
     });
 
-    // Create nickname if not yet created (user row exists in DB at this point)
+    // Create nickname if not yet created
     const existingNickname = await prisma.nickname.findUnique({ where: { userId: data.user.id } });
     if (!existingNickname) {
         const handle = `user_${Math.random().toString(36).substring(2, 8)}`;
@@ -145,7 +151,7 @@ const getNewToken = async (refreshToken: string, sessionToken: string): Promise<
         throw new AppError(status.UNAUTHORIZED, "Invalid session");
     }
 
-    const verifiedToken = jwtUtils.verifyToken(refreshToken, envVars.REFRESH_TOKEN_SECRET);
+    const verifiedToken = jwtUtils.verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET!);
 
     if (!verifiedToken.success) {
         throw new AppError(status.UNAUTHORIZED, "Invalid refresh token");
@@ -167,7 +173,7 @@ const getNewToken = async (refreshToken: string, sessionToken: string): Promise<
     await prisma.session.update({
         where: { token: sessionToken },
         data: {
-            expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
+            expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
         },
     });
 
@@ -199,7 +205,6 @@ const changePassword = async (
         throw new AppError(status.NOT_FOUND, "User not found");
     }
 
-    // Use Better Auth to change password
     await auth.api.changePassword({
         body: {
             currentPassword,
@@ -220,7 +225,6 @@ const changePassword = async (
         email: user.email,
     });
 
-    // Get new session
     const session = await prisma.session.findFirst({
         where: { userId: user.id },
         orderBy: { createdAt: "desc" },
@@ -250,87 +254,6 @@ const logoutUser = async (sessionToken: string) => {
     return { message: "Logged out successfully" };
 };
 
-const verifyEmail = async (email: string, otp: string) => {
-    try {
-        await auth.api.verifyEmailOTP({
-            body: { email, otp },
-        });
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Invalid or expired OTP";
-        throw new AppError(status.BAD_REQUEST, message);
-    }
-
-    return { message: "Email verified successfully" };
-};
-
-const resendVerificationOTP = async (email: string) => {
-    const user = await prisma.user.findUnique({ where: { email } });
-
-    if (!user) {
-        throw new AppError(status.NOT_FOUND, "User not found");
-    }
-
-    if (user.emailVerified) {
-        throw new AppError(status.BAD_REQUEST, "Email is already verified");
-    }
-
-    try {
-        await auth.api.sendVerificationOTP({
-            body: { email, type: "email-verification" as const },
-        });
-    } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : "Failed to resend OTP";
-        throw new AppError(status.INTERNAL_SERVER_ERROR, message);
-    }
-
-    return { message: "Verification OTP resent to email" };
-};
-
-const forgetPassword = async (email: string) => {
-    const user = await prisma.user.findUnique({
-        where: { email },
-    });
-
-    if (!user) {
-        throw new AppError(status.NOT_FOUND, "User not found");
-    }
-
-    if (!user.emailVerified) {
-        throw new AppError(status.BAD_REQUEST, "Email not verified");
-    }
-
-    await auth.api.requestPasswordResetEmailOTP({
-        body: { email },
-    });
-
-    return { message: "Password reset OTP sent to email" };
-};
-
-const resetPassword = async (email: string, otp: string, newPassword: string) => {
-    const user = await prisma.user.findUnique({
-        where: { email },
-    });
-
-    if (!user) {
-        throw new AppError(status.NOT_FOUND, "User not found");
-    }
-
-    await auth.api.resetPasswordEmailOTP({
-        body: {
-            email,
-            otp,
-            password: newPassword,
-        },
-    });
-
-    // Delete all sessions for security
-    await prisma.session.deleteMany({
-        where: { userId: user.id },
-    });
-
-    return { message: "Password reset successfully" };
-};
-
 export const AuthService = {
     registerUser,
     loginUser,
@@ -338,8 +261,4 @@ export const AuthService = {
     getNewToken,
     changePassword,
     logoutUser,
-    verifyEmail,
-    resendVerificationOTP,
-    forgetPassword,
-    resetPassword,
 };

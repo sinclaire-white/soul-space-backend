@@ -1,9 +1,8 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { bearer, emailOTP } from "better-auth/plugins";
+import { bearer } from "better-auth/plugins";
 import { UserRole } from "../../../prisma/generated/prisma/enums";
 import { envVars } from "../config/env";
-import { sendEmail } from "../utils/email";
 import { prisma } from "./prisma";
 
 export const auth = betterAuth({
@@ -16,29 +15,10 @@ export const auth = betterAuth({
 
     emailAndPassword: {
         enabled: true,
-        requireEmailVerification: true,
-        sendVerificationEmail: async ({ user, url }: { user: { email: string; name?: string | null }; url: string }) => {
-            console.log("🔥 sendVerificationEmail called for:", user.email);
-            
-            await sendEmail({
-                to: user.email,
-                subject: "Verify your email",
-                templateName: "otp",
-                templateData: {
-                    name: user.name || "Soul Space User",
-                    otp: url,
-                }
-            });
-        },
+        requireEmailVerification: false,
     },
 
     socialProviders: {},
-
-    emailVerification: {
-        sendOnSignUp: true,
-        sendOnSignIn: true,
-        autoSignInAfterVerification: true,
-    },
 
     user: {
         additionalFields: {
@@ -67,46 +47,6 @@ export const auth = betterAuth({
 
     plugins: [
         bearer(),
-        emailOTP({
-            overrideDefaultEmailVerification: true,
-            async sendVerificationOTP({ email, otp, type }) {
-                console.log(`🔥 sendVerificationOTP called: type=${type}, email=${email}`);
-                
-                if (envVars.NODE_ENV !== "production") {
-                    console.log(`DEV OTP (${type}) for ${email}: ${otp}`);
-                }
-
-                if (type === "email-verification") {
-                    await sendEmail({
-                        to: email,
-                        subject: "Verify your email",
-                        templateName: "otp",
-                        templateData: {
-                            name: "Soul Space User",
-                            otp,
-                        }
-                    });
-                } else if (type === "forget-password") {
-                    const user = await prisma.user.findUnique({
-                        where: { email }
-                    });
-
-                    if (user) {
-                        await sendEmail({
-                            to: email,
-                            subject: "Password Reset OTP",
-                            templateName: "otp",
-                            templateData: {
-                                name: "Soul Space User",
-                                otp,
-                            }
-                        });
-                    }
-                }
-            },
-            expiresIn: 5 * 60,
-            otpLength: 6,
-        })
     ],
 
     session: {

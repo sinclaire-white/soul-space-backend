@@ -1,4 +1,3 @@
-
 import { Request, Response } from "express";
 import status from "http-status";
 import { catchAsync } from "../../shared/catchAsync";
@@ -111,50 +110,6 @@ const logoutUser = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
-const verifyEmail = catchAsync(async (req: Request, res: Response) => {
-    const { email, otp } = req.body;
-    const result = await AuthService.verifyEmail(email, otp);
-    sendResponse(res, {
-        httpStatusCode: status.OK,
-        success: true,
-        message: result.message,
-        data: null,
-    });
-});
-
-const resendOTP = catchAsync(async (req: Request, res: Response) => {
-    const { email } = req.body;
-    const result = await AuthService.resendVerificationOTP(email);
-    sendResponse(res, {
-        httpStatusCode: status.OK,
-        success: true,
-        message: result.message,
-        data: null,
-    });
-});
-
-const forgetPassword = catchAsync(async (req: Request, res: Response) => {
-    const { email } = req.body;
-    const result = await AuthService.forgetPassword(email);
-    sendResponse(res, {
-        httpStatusCode: status.OK,
-        success: true,
-        message: result.message,
-        data: null,
-    });
-});
-
-const resetPassword = catchAsync(async (req: Request, res: Response) => {
-    const { email, otp, newPassword } = req.body;
-    const result = await AuthService.resetPassword(email, otp, newPassword);
-    sendResponse(res, {
-        httpStatusCode: status.OK,
-        success: true,
-        message: result.message,
-        data: null,
-    });
-});
-
 export const AuthController = {
     registerUser,
     loginUser,
@@ -162,8 +117,4 @@ export const AuthController = {
     getNewToken,
     changePassword,
     logoutUser,
-    verifyEmail,
-    resendOTP,
-    forgetPassword,
-    resetPassword,
 };

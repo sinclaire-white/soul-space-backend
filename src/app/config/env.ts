@@ -67,10 +67,10 @@ const getOptionalEnvVariable = (key: keyof typeof process.env): string | undefin
   return process.env[key] || undefined;
 };
 
-const getOptionalNumberEnvVariable = (key: keyof typeof process.env): number | undefined => {
-  const value = process.env[key];
-  return value ? parseInt(value, 10) : undefined;
-};
+// const getOptionalNumberEnvVariable = (key: keyof typeof process.env): number | undefined => {
+//   const value = process.env[key];
+//   return value ? parseInt(value, 10) : undefined;
+// };
 
 export const envVars: EnvConfig = {
   NODE_ENV: (process.env.NODE_ENV as string) || "development",
@@ -111,6 +111,6 @@ export const envVars: EnvConfig = {
   // SMTP_FROM: getOptionalEnvVariable("SMTP_FROM"),
 
   // Resend Email
-  RESEND_API_KEY: getOptionalEnvVariable("RESEND_API_KEY"),
-  EMAIL_FROM: getOptionalEnvVariable("EMAIL_FROM"),
+  // RESEND_API_KEY: getOptionalEnvVariable("RESEND_API_KEY"),
+  // EMAIL_FROM: getOptionalEnvVariable("EMAIL_FROM"),
 };

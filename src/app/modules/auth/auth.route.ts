@@ -7,7 +7,6 @@ import { AuthValidation } from "./auth.validation";
 
 const router = express.Router();
 
-// Public routes
 router.post(
     "/register",
     validateRequest(AuthValidation.registerSchema),
@@ -25,30 +24,6 @@ router.post(
     "/refresh-token",
     validateRequest(AuthValidation.refreshTokenSchema),
     AuthController.getNewToken
-);
-
-router.post(
-    "/verify-email",
-    validateRequest(AuthValidation.verifyEmailSchema),
-    AuthController.verifyEmail
-);
-
-router.post(
-    "/resend-otp",
-    validateRequest(AuthValidation.resendOTPSchema),
-    AuthController.resendOTP
-);
-
-router.post(
-    "/forgot-password",
-    validateRequest(AuthValidation.forgotPasswordSchema),
-    AuthController.forgetPassword
-);
-
-router.post(
-    "/reset-password",
-    validateRequest(AuthValidation.resetPasswordSchema),
-    AuthController.resetPassword
 );
 
 // Protected routes
